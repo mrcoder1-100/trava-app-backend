@@ -3,10 +3,10 @@
     "id": "usr_demo_coimbatore_01",
     "fullName": "Sam",
     "email": "demo@trava.org",
-    "passwordHash": "$2a$10$sQ.WgL3/Au.b.oN2hEUe7uEYgrg/mOi5p8lbsfZWHG2Q6D9YlIePm",
+    "passwordHash": "$2a$10$43Jf5y9oMZLhtG7Veu8cWeb4uL/j8xlxGiOYgcMhk4uVAOoXmncKi",
     "role": "PASSENGER",
     "pointsBalance": 50,
     "isDemoAccount": true,
-    "createdAt": "2026-10-22T18:24:52.392Z"
+    "createdAt": "2026-10-22T19:01:10.279Z"
   }
 ]

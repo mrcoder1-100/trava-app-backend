@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
+const supabase = require('./supabaseClient');
 
 // Collection filenames
 const COLLECTIONS = [
@@ -28,7 +29,7 @@ class JsonDatabase {
     this.init();
   }
 
-  init() {
+  async init() {
     if (!fs.existsSync(this.dataDir)) {
       fs.mkdirSync(this.dataDir, { recursive: true });
     }
@@ -45,6 +46,39 @@ class JsonDatabase {
     // If database is empty or routes are missing, seed initial Coimbatore demo data
     if (this.getCollection('routes').length < 5) {
       this.seedInitialData();
+    }
+
+    // Asynchronously synchronize with Supabase if configured
+    if (config.useSupabase && supabase) {
+      await this.syncFromSupabase();
+    }
+  }
+
+  async syncFromSupabase() {
+    if (!supabase) return;
+    try {
+      for (const name of COLLECTIONS) {
+        const { data, error } = await supabase.from(name).select('*');
+        if (!error && Array.isArray(data) && data.length > 0) {
+          this.cache.set(name, data);
+          console.log(`[Supabase -> In-Memory DB] Loaded ${data.length} records for ${name}`);
+        }
+      }
+    } catch (err) {
+      console.warn('[Supabase Sync] Note: Initial Supabase sync skipped:', err.message);
+    }
+  }
+
+  async syncRecordToSupabase(collectionName, record, action = 'upsert') {
+    if (!supabase || !config.useSupabase) return;
+    try {
+      if (action === 'delete') {
+        await supabase.from(collectionName).delete().eq('id', record.id);
+      } else {
+        await supabase.from(collectionName).upsert(record);
+      }
+    } catch (err) {
+      // Quiet failover to preserve ultra-low latency & zero crashes
     }
   }
 
@@ -112,6 +146,7 @@ class JsonDatabase {
     };
     items.push(created);
     this.persistCollection(collectionName);
+    this.syncRecordToSupabase(collectionName, created, 'upsert');
     return created;
   }
 
@@ -126,6 +161,7 @@ class JsonDatabase {
       updatedAt: new Date().toISOString()
     };
     this.persistCollection(collectionName);
+    this.syncRecordToSupabase(collectionName, items[index], 'upsert');
     return items[index];
   }
 
@@ -136,6 +172,7 @@ class JsonDatabase {
 
     items.splice(index, 1);
     this.persistCollection(collectionName);
+    this.syncRecordToSupabase(collectionName, { id }, 'delete');
     return true;
   }
 

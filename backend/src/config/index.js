@@ -16,6 +16,11 @@ module.exports = {
     return parentTwo;
   })(),
   
+  // Supabase Configuration
+  supabaseUrl: process.env.SUPABASE_URL || 'https://tsbtaammmkxlyymgdeic.supabase.co',
+  supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || 'sb_publishable_3sV1vwHGaRM6z_sGhSXQcg_gkNoCpPe',
+  useSupabase: process.env.USE_SUPABASE === 'true' || process.env.NODE_ENV === 'production',
+
   // Simulation & Journey Rules
   simulationTickSeconds: parseInt(process.env.SIMULATION_TICK_SECONDS, 10) || 2,
   minJourneyDistanceKm: parseFloat(process.env.MIN_JOURNEY_DISTANCE_KM) || 0.5,
