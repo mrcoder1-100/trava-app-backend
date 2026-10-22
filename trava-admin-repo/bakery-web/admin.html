@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRAVA Super Admin Console | Internal Operations Platform</title>
+  <meta name="description" content="Trava Core Team Super Admin Portal for Public Transit & Merchant Partner Governance in Coimbatore.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --trava-emerald: #0F4C3A;
+      --trava-emerald-light: #166A51;
+      --trava-emerald-dark: #07261D;
+      --trava-accent: #10B981;
+      --trava-gold: #D97706;
+      --trava-gold-light: #FEF3C7;
+      --trava-indigo: #4338CA;
+      --trava-dark-bg: #090E17;
+      --trava-dark-surface: #111A29;
+      --trava-dark-card: #162235;
+      --trava-border: #1E2D45;
+      --trava-text: #F8FAFC;
+      --trava-muted: #94A3B8;
+      --trava-danger: #EF4444;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--trava-dark-bg);
+      color: var(--trava-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-navbar {
+      background: var(--trava-dark-surface);
+      border-bottom: 1px solid var(--trava-border);
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-group { display: flex; align-items: center; gap: 12px; }
+    .brand-shield {
+      background: linear-gradient(135deg, #10B981 0%, #0F4C3A 100%);
+      color: white;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      font-size: 10.5px;
+      font-weight: 800;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .admin-user-pill { display: flex; align-items: center; gap: 12px; }
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #34D399;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { background: var(--trava-danger); color: white; }
+
+    .admin-layout { max-width: 1440px; margin: 0 auto; padding: 24px; width: 100%; }
+
+    .admin-hero {
+      background: linear-gradient(135deg, #111A29 0%, #162438 100%);
+      border: 1px solid var(--trava-border);
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hero-heading {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-sub { font-size: 13.5px; color: var(--trava-muted); }
+    .hero-actions { display: flex; gap: 10px; align-items: center; }
+
+    .btn-action-primary {
+      background: #10B981;
+      color: #07261D;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-action-primary:hover { background: #34D399; transform: translateY(-1px); }
+
+    .btn-action-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--trava-text);
+      border: 1px solid var(--trava-border);
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-action-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+
+    /* KPI Cards */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-box {
+      background: var(--trava-dark-surface);
+      border: 1px solid var(--trava-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .kpi-box:hover { transform: translateY(-2px); border-color: rgba(16, 185, 129, 0.4); }
+
+    .kpi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .kpi-icon {
+      font-size: 22px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .kpi-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+    }
+
+    .kpi-num {
+      font-size: 28px;
+      font-weight: 900;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+
+    .kpi-desc {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--trava-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tab Bar */
+    .tab-bar {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--trava-border);
+      margin-bottom: 22px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .nav-tab-btn {
+      background: none;
+      border: none;
+      color: var(--trava-muted);
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .nav-tab-btn:hover { color: #FFFFFF; }
+    .nav-tab-btn.active { color: #10B981; border-bottom-color: #10B981; }
+
+    .tab-count-badge {
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--trava-text);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .nav-tab-btn.active .tab-count-badge { background: rgba(16, 185, 129, 0.2); color: #34D399; }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.2s ease; }
+
+    .data-card {
+      background: var(--trava-dark-surface);
+      border: 1px solid var(--trava-border);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+
+    .data-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .data-card-title {
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .data-card-sub { font-size: 12.5px; color: var(--trava-muted); margin-top: 2px; }
+
+    .table-wrapper { width: 100%; overflow-x: auto; }
+    .super-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .super-table th {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px 16px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--trava-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--trava-border);
+    }
+    .super-table td {
+      padding: 16px;
+      font-size: 13.5px;
+      border-bottom: 1px solid var(--trava-border);
+      vertical-align: middle;
+    }
+    .super-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .pill-green { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .pill-amber { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .pill-indigo { background: rgba(99, 102, 241, 0.15); color: #A5B4FC; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .pill-gray { background: rgba(255, 255, 255, 0.08); color: #CBD5E1; border: 1px solid rgba(255, 255, 255, 0.15); }
+
+    .btn-sm {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-sm-primary { background: #10B981; color: #07261D; }
+    .btn-sm-primary:hover { background: #34D399; }
+    .btn-sm-ghost { background: rgba(255, 255, 255, 0.08); color: #FFFFFF; border: 1px solid var(--trava-border); }
+    .btn-sm-ghost:hover { background: rgba(255, 255, 255, 0.15); }
+    .btn-sm-danger { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .btn-sm-danger:hover { background: var(--trava-danger); color: white; }
+
+    .partner-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .partner-box {
+      background: var(--trava-dark-card);
+      border: 1px solid var(--trava-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Modal Backdrop & Cards */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.active { display: flex; }
+
+    .modal-card {
+      background: var(--trava-dark-surface);
+      border: 1px solid var(--trava-border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 520px;
+      padding: 26px;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .modal-headline { font-size: 18px; font-weight: 800; }
+    .modal-close-btn { background: none; border: none; color: var(--trava-muted); font-size: 22px; cursor: pointer; }
+    .form-row { margin-bottom: 14px; }
+    .form-row label { display: block; font-size: 12.5px; font-weight: 700; color: var(--trava-muted); margin-bottom: 6px; }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--trava-dark-bg);
+      border: 1px solid var(--trava-border);
+      border-radius: 10px;
+      color: #FFFFFF;
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+    }
+    .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+
+    /* Ride History Modal & Timeline */
+    .ride-card {
+      background: var(--trava-dark-card);
+      border: 1px solid var(--trava-border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+    .ride-card:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateY(-1px);
+    }
+    .ride-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .ride-bus-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ride-reg-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94A3B8;
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--trava-border);
+    }
+    .ride-route-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #34D399;
+      margin-bottom: 10px;
+    }
+    .ride-stops-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+    }
+    .ride-stop-point {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ride-stop-type {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--trava-muted);
+    }
+    .ride-stop-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #F8FAFC;
+    }
+    .ride-metrics-bar {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 12px;
+      color: var(--trava-muted);
+      padding-top: 8px;
+      border-top: 1px dashed var(--trava-border);
+    }
+    .ride-metric-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+    .ride-metric-item strong {
+      color: #FFFFFF;
+    }
+
+    /* Auth Gatekeeper */
+    #auth-gatekeeper {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at center, #111A29 0%, #070B12 100%);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: var(--trava-dark-surface);
+      border: 1px solid var(--trava-border);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 440px;
+      padding: 34px 28px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .auth-logo-badge {
+      width: 60px; height: 60px;
+      background: linear-gradient(135deg, #10B981 0%, #0F4C3A 100%);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px; margin: 0 auto 16px;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+    }
+    .auth-title { font-size: 21px; font-weight: 900; margin-bottom: 6px; }
+    .auth-sub { font-size: 13px; color: var(--trava-muted); margin-bottom: 22px; }
+
+    #toast-shelf {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      display: flex; flex-direction: column; gap: 10px;
+      z-index: 11000;
+    }
+    .toast-msg {
+      background: #111A29;
+      color: white;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- 1. TRAVA SUPER ADMIN AUTHENTICATION GATEKEEPER                            -->
+  <!-- ========================================================================= -->
+  <div id="auth-gatekeeper">
+    <div class="auth-card">
+      <div class="auth-logo-badge">🛡️</div>
+      <h1 class="auth-title">TRAVA SUPER ADMIN</h1>
+      <p class="auth-sub">Internal Trava Operations & Governance Platform.<br>Restricted to Trava Team Personnel.</p>
+      <div style="margin-bottom: 16px;">
+        <span class="brand-badge" style="background: rgba(67, 56, 202, 0.2); color: #A5B4FC; border-color: rgba(99, 102, 241, 0.35); font-size: 11px; padding: 4px 10px;">
+          🤖 Engineered with IBM Bob
+        </span>
+      </div>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div class="form-row" style="text-align:left;">
+          <label>Admin ID / Email</label>
+          <input type="email" id="admin-user-input" class="form-control" placeholder="Enter administrative email" autocomplete="username" required>
+        </div>
+        <div class="form-row" style="text-align:left;">
+          <label>Master Passkey</label>
+          <input type="password" id="admin-pass-input" class="form-control" placeholder="Enter administrative passkey" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn-action-primary" style="width:100%; justify-content:center; padding:12px; font-size:14px; margin-top:8px;">
+          🚀 Sign In as Trava Super Admin
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. SUPER ADMIN MAIN CONSOLE (TRAVA INTERNAL OPERATIONS)                   -->
+  <!-- ========================================================================= -->
+  <header class="admin-navbar">
+    <div class="brand-group">
+      <div class="brand-shield">🛡️</div>
+      <div>
+        <div class="brand-title">
+          TRAVA OPERATIONS
+          <span class="brand-badge">Super Admin Console</span>
+          <span class="brand-badge" style="background: rgba(67, 56, 202, 0.2); color: #A5B4FC; border-color: rgba(99, 102, 241, 0.35);">🤖 Built with IBM Bob</span>
+        </div>
+        <div style="font-size:11px; color:var(--trava-muted); font-weight:600;">People Solving People's Problem · Full Governance Platform</div>
+      </div>
+    </div>
+
+    <div class="admin-user-pill">
+      <div class="live-status-pill">
+        <span class="pulse-dot"></span>
+        <span>TRAVA PLATFORM ONLINE</span>
+      </div>
+      <div style="font-size:13px; font-weight:800; color:#FFFFFF;" id="admin-profile-name">
+        👤 Trava Super Admin
+      </div>
+      <button type="button" class="btn-logout" onclick="adminLogout()">
+        Sign Out
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-layout">
+    <!-- Hero Banner -->
+    <section class="admin-hero">
+      <div>
+        <h1 class="hero-heading">
+          Coimbatore Smart Transit Command Center
+          <span class="pill pill-green">Operations Cluster</span>
+        </h1>
+        <p class="hero-sub">Full administrative oversight: Manage Commuters, Onboard & Audit Merchant Partners, Control Live Transit Telemetry.</p>
+      </div>
+      <div class="hero-actions">
+        <button type="button" class="btn-action-primary" onclick="syncAllData()">
+          ⚡ Refresh Data
+        </button>
+        <button type="button" class="btn-action-secondary" onclick="confirmResetPlatform()">
+          🔄 Reset Demo State
+        </button>
+      </div>
+    </section>
+
+    <!-- KPI Row -->
+    <section class="kpi-row">
+      <div class="kpi-box">
+        <div class="kpi-top">
+          <div class="kpi-icon">👥</div>
+          <span class="kpi-badge">Commuters</span>
+        </div>
+        <div class="kpi-num" id="kpi-val-commuters">--</div>
+        <div class="kpi-desc">Registered Commuters</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-top">
+          <div class="kpi-icon">🏪</div>
+          <span class="kpi-badge">Partners</span>
+        </div>
+        <div class="kpi-num" id="kpi-val-partners">--</div>
+        <div class="kpi-desc">Merchant Partners</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-top">
+          <div class="kpi-icon">🚌</div>
+          <span class="kpi-badge">Fleet</span>
+        </div>
+        <div class="kpi-num" id="kpi-val-buses">--</div>
+        <div class="kpi-desc">Live Transit Buses</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-top">
+          <div class="kpi-icon">🎟️</div>
+          <span class="kpi-badge">Vouchers</span>
+        </div>
+        <div class="kpi-num" id="kpi-val-coupons">--</div>
+        <div class="kpi-desc">Discounts Issued</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-top">
+          <div class="kpi-icon">💰</div>
+          <span class="kpi-badge">Cashback</span>
+        </div>
+        <div class="kpi-num" id="kpi-val-cashback">--</div>
+        <div class="kpi-desc">Cashback Distributed</div>
+      </div>
+
+      <div class="kpi-box">
+        <div class="kpi-top">
+          <div class="kpi-icon">⭐</div>
+          <span class="kpi-badge">Points Pool</span>
+        </div>
+        <div class="kpi-num" id="kpi-val-points">--</div>
+        <div class="kpi-desc">Passenger Reward Points</div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-bar">
+      <button type="button" class="nav-tab-btn active" data-tab="tab-commuters" onclick="switchTab('tab-commuters', this)">
+        <span>👥 Commuters (Edit / Delete)</span>
+        <span class="tab-count-badge" id="badge-commuters">0</span>
+      </button>
+      <button type="button" class="nav-tab-btn" data-tab="tab-partners" onclick="switchTab('tab-partners', this)">
+        <span>🏪 Partners (Edit / Delete)</span>
+        <span class="tab-count-badge" id="badge-partners">0</span>
+      </button>
+      <button type="button" class="nav-tab-btn" data-tab="tab-fleet" onclick="switchTab('tab-fleet', this)">
+        <span>🚌 Live Bus Fleet</span>
+        <span class="tab-count-badge" id="badge-fleet">0</span>
+      </button>
+      <button type="button" class="nav-tab-btn" data-tab="tab-coupons" onclick="switchTab('tab-coupons', this)">
+        <span>🎟️ Active Vouchers</span>
+        <span class="tab-count-badge" id="badge-coupons">0</span>
+      </button>
+      <button type="button" class="nav-tab-btn" data-tab="tab-redemptions" onclick="switchTab('tab-redemptions', this)">
+        <span>🧾 Counter Redemptions Audit</span>
+        <span class="tab-count-badge" id="badge-redemptions">0</span>
+      </button>
+    </nav>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: COMMUTER / CUSTOMER MANAGEMENT (FULL CRUD: EDIT / DELETE)      -->
+    <!-- ===================================================================== -->
+    <div id="tab-commuters" class="tab-pane active">
+      <div class="data-card">
+        <div class="data-card-header">
+          <div>
+            <h2 class="data-card-title">👥 Commuters Directory & Management</h2>
+            <p class="data-card-sub">Edit passenger details, grant rewards, or delete commuter accounts.</p>
+          </div>
+          <button type="button" class="btn-sm btn-sm-primary" onclick="openCreateCommuterModal()">
+            ➕ Register New Commuter
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="super-table">
+            <thead>
+              <tr>
+                <th>Passenger Name & ID</th>
+                <th>Contact Email & Phone</th>
+                <th>Role</th>
+                <th>Points Balance</th>
+                <th>Ride History</th>
+                <th>Vouchers</th>
+                <th>Admin Actions (Edit / Delete)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-commuters">
+              <tr><td colspan="7" style="text-align:center; padding: 24px; color: var(--trava-muted);">Synchronizing commuter records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: MERCHANT PARTNERS MANAGEMENT (FULL CRUD: EDIT / DELETE)       -->
+    <!-- ===================================================================== -->
+    <div id="tab-partners" class="tab-pane">
+      <div class="data-card">
+        <div class="data-card-header">
+          <div>
+            <h2 class="data-card-title">🏪 Registered Merchant Partners</h2>
+            <p class="data-card-sub">Manage partner stores, update promotional offers, or remove partner businesses.</p>
+          </div>
+          <button type="button" class="btn-sm btn-sm-primary" onclick="openOnboardModal()">
+            ➕ Onboard New Merchant Partner
+          </button>
+        </div>
+
+        <div id="partners-container" class="partner-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: LIVE FLEET TELEMETRY & TRANSIT CONTROL                         -->
+    <!-- ===================================================================== -->
+    <div id="tab-fleet" class="tab-pane">
+      <div class="data-card">
+        <div class="data-card-header">
+          <div>
+            <h2 class="data-card-title">🚌 Bus Fleet Telemetry & Live Crowd Override</h2>
+            <p class="data-card-sub">Real-time GPS tracking, operator classifications (TNSTC vs Private), and live crowd status controls.</p>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="super-table">
+            <thead>
+              <tr>
+                <th>Bus Identifier</th>
+                <th>Operator Category</th>
+                <th>Assigned Route</th>
+                <th>Live Velocity</th>
+                <th>Crowd Density Override</th>
+                <th>GPS Contributor</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-fleet">
+              <tr><td colspan="6" style="text-align:center; padding: 24px; color: var(--trava-muted);">Connecting to live transit stream...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 4: ISSUED VOUCHERS / COUPONS                                      -->
+    <!-- ===================================================================== -->
+    <div id="tab-coupons" class="tab-pane">
+      <div class="data-card">
+        <div class="data-card-header">
+          <div>
+            <h2 class="data-card-title">🎟️ Active Promotional Campaigns & Discount Vouchers</h2>
+            <p class="data-card-sub">Vouchers in circulation granted to daily commuters for partner store redemption.</p>
+          </div>
+          <button type="button" class="btn-sm btn-sm-primary" onclick="openIssueModal()">
+            ➕ Deploy Promotional Voucher
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="super-table">
+            <thead>
+              <tr>
+                <th>Voucher Code</th>
+                <th>Assigned Commuter</th>
+                <th>Partner Merchant</th>
+                <th>Cashback / Min Spend</th>
+                <th>Voucher Status</th>
+                <th>Expiration Date</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-coupons">
+              <tr><td colspan="6" style="text-align:center; padding: 24px; color: var(--trava-muted);">Loading active coupons...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 5: COUNTER REDEMPTIONS AUDIT                                      -->
+    <!-- ===================================================================== -->
+    <div id="tab-redemptions" class="tab-pane">
+      <div class="data-card">
+        <div class="data-card-header">
+          <div>
+            <h2 class="data-card-title">🧾 Merchant Counter Redemptions Ledger</h2>
+            <p class="data-card-sub">Immutable audit log of verified discount redemptions executed by partner cashiers.</p>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="super-table">
+            <thead>
+              <tr>
+                <th>Redemption ID</th>
+                <th>Voucher Code</th>
+                <th>Commuter</th>
+                <th>Cashier Terminal</th>
+                <th>Cashback Amount</th>
+                <th>Verification Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-redemptions">
+              <tr><td colspan="6" style="text-align:center; padding: 24px; color: var(--trava-muted);">Retrieving audit records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="text-align: center; padding: 24px; font-size: 12px; color: var(--trava-muted); border-top: 1px solid var(--trava-border); margin-top: 32px;">
+    <div style="font-weight: 700; color: #FFFFFF;">TRAVA Operations Command Center · Coimbatore Transit Network</div>
+    <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;">
+      <span class="pill" style="background: rgba(67, 56, 202, 0.15); color: #A5B4FC; border: 1px solid rgba(99, 102, 241, 0.3); font-size: 11px;">
+        🤖 Architected & Built with IBM Bob
+      </span>
+      <span>Autonomous Full-Stack AI Software Development Partner</span>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: CREATE NEW COMMUTER                                                -->
+  <!-- ========================================================================= -->
+  <div id="modal-create-commuter" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-top">
+        <h3 class="modal-headline">➕ Register New Commuter</h3>
+        <button type="button" class="modal-close-btn" onclick="closeCreateCommuterModal()">&times;</button>
+      </div>
+      <div class="form-row">
+        <label>Full Passenger Name</label>
+        <input type="text" id="cr-comm-name" class="form-control" placeholder="e.g. Anandha Kumar" required>
+      </div>
+      <div class="form-row">
+        <label>Email Address</label>
+        <input type="email" id="cr-comm-email" class="form-control" placeholder="e.g. anand@trava.org" required>
+      </div>
+      <div class="form-row">
+        <label>Phone Number</label>
+        <input type="text" id="cr-comm-phone" class="form-control" value="+91 98421 55667">
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="form-row">
+          <label>Starting Points</label>
+          <input type="number" id="cr-comm-points" class="form-control" value="50">
+        </div>
+        <div class="form-row">
+          <label>Role</label>
+          <select id="cr-comm-role" class="form-control">
+            <option value="PASSENGER">PASSENGER</option>
+            <option value="REGULAR_COMMUTER">REGULAR_COMMUTER</option>
+            <option value="STUDENT_PASS">STUDENT_PASS</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeCreateCommuterModal()">Cancel</button>
+        <button type="button" class="btn-sm btn-sm-primary" onclick="submitCreateCommuter()">Create Commuter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: EDIT COMMUTER                                                      -->
+  <!-- ========================================================================= -->
+  <div id="modal-edit-commuter" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-top">
+        <h3 class="modal-headline">✏️ Edit Commuter Account</h3>
+        <button type="button" class="modal-close-btn" onclick="closeEditCommuterModal()">&times;</button>
+      </div>
+      <input type="hidden" id="ed-comm-id">
+      <div class="form-row">
+        <label>Full Passenger Name</label>
+        <input type="text" id="ed-comm-name" class="form-control" required>
+      </div>
+      <div class="form-row">
+        <label>Email Address</label>
+        <input type="email" id="ed-comm-email" class="form-control" required>
+      </div>
+      <div class="form-row">
+        <label>Phone Number</label>
+        <input type="text" id="ed-comm-phone" class="form-control">
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="form-row">
+          <label>Reward Points</label>
+          <input type="number" id="ed-comm-points" class="form-control">
+        </div>
+        <div class="form-row">
+          <label>Role</label>
+          <select id="ed-comm-role" class="form-control">
+            <option value="PASSENGER">PASSENGER</option>
+            <option value="REGULAR_COMMUTER">REGULAR_COMMUTER</option>
+            <option value="STUDENT_PASS">STUDENT_PASS</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeEditCommuterModal()">Cancel</button>
+        <button type="button" class="btn-sm btn-sm-primary" onclick="submitEditCommuter()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: EDIT PARTNER MERCHANT                                              -->
+  <!-- ========================================================================= -->
+  <div id="modal-edit-partner" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-top">
+        <h3 class="modal-headline">✏️ Edit Merchant Partner</h3>
+        <button type="button" class="modal-close-btn" onclick="closeEditPartnerModal()">&times;</button>
+      </div>
+      <input type="hidden" id="ed-part-id">
+      <div class="form-row">
+        <label>Business / Merchant Name</label>
+        <input type="text" id="ed-part-name" class="form-control" required>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="form-row">
+          <label>Category</label>
+          <select id="ed-part-cat" class="form-control">
+            <option value="BAKERY">Bakery & Sweets</option>
+            <option value="RESTAURANT">Restaurant & Cafe</option>
+            <option value="SUPERMARKET">Supermarket & Grocery</option>
+            <option value="FITNESS">Gym & Fitness</option>
+            <option value="RETAIL">Retail & Lifestyle</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Rating (★)</label>
+          <input type="number" id="ed-part-rating" class="form-control" step="0.1" min="1" max="5">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Proprietor / Owner Name</label>
+        <input type="text" id="ed-part-owner" class="form-control" required>
+      </div>
+      <div class="form-row">
+        <label>Location / Address</label>
+        <input type="text" id="ed-part-loc" class="form-control" required>
+      </div>
+      <div class="form-row">
+        <label>Active Campaign Offer</label>
+        <input type="text" id="ed-part-offer" class="form-control" required>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeEditPartnerModal()">Cancel</button>
+        <button type="button" class="btn-sm btn-sm-primary" onclick="submitEditPartner()">Save Partner</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: AWARD BONUS POINTS TO COMMUTER                                     -->
+  <!-- ========================================================================= -->
+  <div id="modal-award-points" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-top">
+        <h3 class="modal-headline">🎁 Award Trava Bonus Points</h3>
+        <button type="button" class="modal-close-btn" onclick="closePointsModal()">&times;</button>
+      </div>
+      <div style="background:var(--trava-dark-card); padding:12px; border-radius:10px; margin-bottom:16px; font-size:13px; border:1px solid var(--trava-border);">
+        Recipient: <strong id="pt-user-name" style="color:#10B981;">--</strong><br>
+        Current Balance: <strong id="pt-user-balance">-- pts</strong>
+      </div>
+      <div class="form-row">
+        <label>Points to Award</label>
+        <input type="number" id="pt-amount-input" class="form-control" value="50" min="5" step="5">
+      </div>
+      <div class="form-row">
+        <label>Administrative Reason</label>
+        <input type="text" id="pt-reason-input" class="form-control" value="Passenger Reward Bonus">
+      </div>
+      <div class="modal-buttons">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closePointsModal()">Cancel</button>
+        <button type="button" class="btn-sm btn-sm-primary" onclick="submitPointsAward()">Award Points</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ONBOARD NEW MERCHANT PARTNER                                       -->
+  <!-- ========================================================================= -->
+  <div id="modal-onboard-partner" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-top">
+        <h3 class="modal-headline">🏪 Onboard New Merchant Partner</h3>
+        <button type="button" class="modal-close-btn" onclick="closeOnboardModal()">&times;</button>
+      </div>
+      <div class="form-row">
+        <label>Business / Merchant Name</label>
+        <input type="text" id="ob-name" class="form-control" placeholder="e.g. Anandhaas Sweets & Restaurant">
+      </div>
+      <div class="form-row">
+        <label>Industry Category</label>
+        <select id="ob-cat" class="form-control">
+          <option value="BAKERY">Bakery & Sweets</option>
+          <option value="RESTAURANT">Restaurant & Cafe</option>
+          <option value="SUPERMARKET">Supermarket & Grocery</option>
+          <option value="FITNESS">Gym & Fitness</option>
+          <option value="RETAIL">Retail & Lifestyle</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Proprietor / Contact Person</label>
+        <input type="text" id="ob-owner" class="form-control" placeholder="e.g. Ramesh Kumar">
+      </div>
+      <div class="form-row">
+        <label>Terminal / Location Address</label>
+        <input type="text" id="ob-loc" class="form-control" placeholder="e.g. Lakshmi Mills Junction, Coimbatore">
+      </div>
+      <div class="form-row">
+        <label>Commuter Promotional Offer</label>
+        <input type="text" id="ob-offer" class="form-control" value="Buy above ₹400, Get ₹100 Cashback">
+      </div>
+      <div class="modal-buttons">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeOnboardModal()">Cancel</button>
+        <button type="button" class="btn-sm btn-sm-primary" onclick="submitOnboardPartner()">Register Partner</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: ISSUE NEW PROMOTIONAL VOUCHER                                      -->
+  <!-- ========================================================================= -->
+  <div id="modal-issue-voucher" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-top">
+        <h3 class="modal-headline">🎟️ Deploy Promotional Voucher</h3>
+        <button type="button" class="modal-close-btn" onclick="closeIssueModal()">&times;</button>
+      </div>
+      <div class="form-row">
+        <label>Recipient Commuter Name</label>
+        <input type="text" id="iss-name" class="form-control" value="Sam">
+      </div>
+      <div class="form-row">
+        <label>Partner Merchant</label>
+        <select id="iss-merchant" class="form-control">
+          <option value="Annapoorna Bakery & Sweets">Annapoorna Bakery & Sweets (Gandhipuram)</option>
+          <option value="Sree Annapoorna Restaurant">Sree Annapoorna Restaurant (R.S. Puram)</option>
+          <option value="Nilgiris 1905 Supermarket">Nilgiris 1905 Supermarket (Peelamedu)</option>
+          <option value="Slam Fitness Studio">Slam Fitness Studio (Singanallur)</option>
+        </select>
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <div class="form-row">
+          <label>Cashback Value (₹)</label>
+          <input type="number" id="iss-val" class="form-control" value="150">
+        </div>
+        <div class="form-row">
+          <label>Min Spend (₹)</label>
+          <input type="number" id="iss-min" class="form-control" value="500">
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeIssueModal()">Cancel</button>
+        <button type="button" class="btn-sm btn-sm-primary" onclick="submitIssueVoucher()">Issue Voucher</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: COMMUTER TRANSIT RIDE HISTORY                                      -->
+  <!-- ========================================================================= -->
+  <div id="modal-ride-history" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 680px; max-height: 88vh; display: flex; flex-direction: column;">
+      <div class="modal-top" style="margin-bottom: 12px;">
+        <div>
+          <h3 class="modal-headline" id="rh-modal-title">📜 Transit Ride History</h3>
+          <p style="font-size: 12px; color: var(--trava-muted); margin-top: 2px;">
+            Verified Coimbatore public bus journeys, route telemetry, and passenger rewards.
+          </p>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeRideHistoryModal()">&times;</button>
+      </div>
+
+      <!-- Commuter Summary Strip -->
+      <div id="rh-commuter-strip" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <div style="font-size: 10.5px; font-weight: 800; color: #34D399; text-transform: uppercase;">PASSENGER PROFILE</div>
+          <div id="rh-passenger-name" style="font-size: 16px; font-weight: 900; color: #FFFFFF;">--</div>
+        </div>
+        <div style="display: flex; gap: 16px;">
+          <div>
+            <div style="font-size: 10px; font-weight: 800; color: var(--trava-muted);">TOTAL RIDES</div>
+            <div id="rh-total-rides" style="font-size: 15px; font-weight: 800; color: #FFFFFF;">--</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; font-weight: 800; color: var(--trava-muted);">TOTAL DISTANCE</div>
+            <div id="rh-total-distance" style="font-size: 15px; font-weight: 800; color: #34D399;">--</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; font-weight: 800; color: var(--trava-muted);">POINTS EARNED</div>
+            <div id="rh-total-points" style="font-size: 15px; font-weight: 800; color: #FBBF24;">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable List of Rides -->
+      <div id="rh-rides-list" style="overflow-y: auto; flex: 1; padding-right: 4px; max-height: 52vh;">
+        <!-- Dynamically rendered -->
+      </div>
+
+      <div class="modal-buttons" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--trava-border);">
+        <button type="button" class="btn-sm btn-sm-ghost" onclick="closeRideHistoryModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-shelf"></div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT CONTROLLER (AUTHENTICATION + FULL CRUD ENGINE)                 -->
+  <!-- ========================================================================= -->
+  <script>
+    function resolveApiBase() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('api')) {
+        localStorage.setItem('trava_admin_api_base', urlParams.get('api'));
+        return urlParams.get('api');
+      }
+      const saved = localStorage.getItem('trava_admin_api_base');
+      if (saved) return saved;
+      // When hosted on a different port locally, target backend at port 5000
+      if (window.location.hostname === 'localhost' && window.location.port !== '5000') {
+        return 'http://localhost:5000/api/v1/admin';
+      }
+      return `${window.location.origin}/api/v1/admin`;
+    }
+
+    const API_BASE = resolveApiBase();
+
+    let adminState = {
+      isAuth: sessionStorage.getItem('trava_admin_auth') === 'true',
+      selectedCommuterId: null,
+      data: {
+        overview: null,
+        commuters: [],
+        partners: [],
+        fleet: [],
+        coupons: [],
+        redemptions: []
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      if (adminState.isAuth) {
+        syncAllData();
+        setInterval(syncAllData, 15000);
+      }
+    });
+
+    function checkAuth() {
+      const gatekeeper = document.getElementById('auth-gatekeeper');
+      if (adminState.isAuth) {
+        gatekeeper.style.display = 'none';
+      } else {
+        gatekeeper.style.display = 'flex';
+      }
+    }
+
+    // Authenticate via dedicated Admin endpoint
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('admin-user-input').value.trim();
+      const password = document.getElementById('admin-pass-input').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        }).then(r => r.json());
+
+        if (res.success) {
+          sessionStorage.setItem('trava_admin_auth', 'true');
+          sessionStorage.setItem('trava_admin_user', JSON.stringify(res.data.admin));
+          adminState.isAuth = true;
+          checkAuth();
+          showToast(`Authenticated as ${res.data.admin.fullName}`);
+          syncAllData();
+        } else {
+          showToast(res.message || 'Authentication failed', 'error');
+        }
+      } catch (err) {
+        // Fallback for direct local match
+        if ((email === 'trava.admin@trava.org' || email === 'admin@trava.org') && password === 'TravaAdmin@2026') {
+          sessionStorage.setItem('trava_admin_auth', 'true');
+          adminState.isAuth = true;
+          checkAuth();
+          showToast('Authenticated as Trava Super Admin (Offline Mode)');
+          syncAllData();
+        } else {
+          showToast('Invalid Super Admin credentials', 'error');
+        }
+      }
+    }
+
+
+    function adminLogout() {
+      sessionStorage.removeItem('trava_admin_auth');
+      sessionStorage.removeItem('trava_admin_user');
+      adminState.isAuth = false;
+      checkAuth();
+      showToast('Signed out from Trava Super Admin Console');
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+    }
+
+    async function syncAllData() {
+      try {
+        const [ovRes, commRes, partRes, fleetRes, coupRes, redRes] = await Promise.all([
+          fetch(`${API_BASE}/overview`).then(r => r.json()).catch(() => ({ success: false })),
+          fetch(`${API_BASE}/commuters`).then(r => r.json()).catch(() => ({ success: false })),
+          fetch(`${API_BASE}/partners`).then(r => r.json()).catch(() => ({ success: false })),
+          fetch(`${API_BASE}/fleet`).then(r => r.json()).catch(() => ({ success: false })),
+          fetch(`${API_BASE}/coupons`).then(r => r.json()).catch(() => ({ success: false })),
+          fetch(`${API_BASE}/redemptions`).then(r => r.json()).catch(() => ({ success: false }))
+        ]);
+
+        if (ovRes.success) {
+          adminState.data.overview = ovRes.data;
+          renderOverview(ovRes.data);
+        }
+        if (commRes.success) {
+          adminState.data.commuters = commRes.data;
+          renderCommuters(commRes.data);
+        }
+        if (partRes.success) {
+          adminState.data.partners = partRes.data;
+          renderPartners(partRes.data);
+        }
+        if (fleetRes.success) {
+          adminState.data.fleet = fleetRes.data;
+          renderFleet(fleetRes.data);
+        }
+        if (coupRes.success) {
+          adminState.data.coupons = coupRes.data;
+          renderCoupons(coupRes.data);
+        }
+        if (redRes.success) {
+          adminState.data.redemptions = redRes.data;
+          renderRedemptions(redRes.data);
+        }
+      } catch (err) {
+        console.warn('Sync error:', err);
+      }
+    }
+
+    function renderOverview(data) {
+      document.getElementById('kpi-val-commuters').innerText = data.commutersCount ?? '4';
+      document.getElementById('kpi-val-partners').innerText = data.partnersCount ?? '4';
+      document.getElementById('kpi-val-buses').innerText = data.busesCount ?? '4';
+      document.getElementById('kpi-val-coupons').innerText = data.activeCouponsCount ?? '4';
+      document.getElementById('kpi-val-cashback').innerText = `₹${data.totalCashbackDistributed ?? 700}`;
+      document.getElementById('kpi-val-points').innerText = `${data.totalPointsAwarded ?? 465} pts`;
+
+      document.getElementById('badge-commuters').innerText = data.commutersCount ?? '4';
+      document.getElementById('badge-partners').innerText = data.partnersCount ?? '4';
+      document.getElementById('badge-fleet').innerText = data.busesCount ?? '4';
+      document.getElementById('badge-coupons').innerText = data.activeCouponsCount + data.redeemedCouponsCount;
+      document.getElementById('badge-redemptions').innerText = data.redeemedCouponsCount ?? '3';
+    }
+
+    function renderCommuters(commuters) {
+      const tbody = document.getElementById('tbody-commuters');
+      if (!tbody) return;
+
+      tbody.innerHTML = commuters.map(c => `
+        <tr>
+          <td>
+            <div style="font-weight:800; color:#FFFFFF;">${escapeHtml(c.fullName)}</div>
+            <div style="font-size:11px; color:var(--trava-muted);">UID: ${c.id}</div>
+          </td>
+          <td>
+            <div>${escapeHtml(c.email)}</div>
+            <div style="font-size:11.5px; color:var(--trava-muted);">${c.phone || '+91 98421 10095'}</div>
+          </td>
+          <td>
+            <span class="pill pill-green">● ${c.role}</span>
+          </td>
+          <td>
+            <strong style="color:#10B981; font-size:15px;">${c.pointsBalance}</strong> pts
+          </td>
+          <td>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="pill pill-green" style="font-size:11px; padding:3px 8px; font-weight:800; white-space:nowrap;">
+                🟢 ${c.journeysCount || 0} ${c.journeysCount === 1 ? 'ride' : 'rides'}
+              </span>
+              <button type="button" class="btn-sm btn-sm-ghost" style="padding:4px 8px; font-size:11px; display:inline-flex; align-items:center; gap:4px;" title="View Verified Ride History" onclick="viewCommuterRides('${c.id}', '${escapeHtml(c.fullName)}')">
+                📜 Rides
+              </button>
+            </div>
+          </td>
+          <td>
+            <span style="font-weight:800; color:#FBBF24;">${c.couponsCount || 1} vouchers</span>
+          </td>
+          <td>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <button type="button" class="btn-sm btn-sm-primary" title="Award Points" onclick="openPointsModal('${c.id}', '${escapeHtml(c.fullName)}', ${c.pointsBalance})">
+                🎁 +Pts
+              </button>
+              <button type="button" class="btn-sm btn-sm-ghost" title="Edit Commuter" onclick="openEditCommuterModal('${c.id}', '${escapeHtml(c.fullName)}', '${escapeHtml(c.email)}', '${c.phone || ''}', ${c.pointsBalance}, '${c.role}')">
+                ✏️ Edit
+              </button>
+              <button type="button" class="btn-sm btn-sm-danger" title="Delete Commuter" onclick="deleteCommuter('${c.id}', '${escapeHtml(c.fullName)}')">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderPartners(partners) {
+      const container = document.getElementById('partners-container');
+      if (!container) return;
+
+      container.innerHTML = partners.map(p => `
+        <div class="partner-box">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+            <div>
+              <span class="pill pill-amber" style="margin-bottom:6px;">🏪 ${p.category}</span>
+              <h3 style="font-size:17px; font-weight:900; color:#FFFFFF;">${escapeHtml(p.name)}</h3>
+              <p style="font-size:12px; color:var(--trava-muted);">${escapeHtml(p.owner)} · ${escapeHtml(p.location)}</p>
+            </div>
+            <span style="font-size:13px; font-weight:800; color:#FBBF24;">★ ${p.rating}</span>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.04); padding:10px 14px; border-radius:10px; border:1px solid var(--trava-border); margin-bottom:14px;">
+            <div style="font-size:10.5px; font-weight:800; color:var(--trava-muted); margin-bottom:2px;">ACTIVE CAMPAIGN</div>
+            <div style="font-size:12.5px; font-weight:800; color:#34D399;">${escapeHtml(p.activeOffer)}</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; text-align:center; padding-top:10px; border-top:1px solid var(--trava-border); margin-bottom:14px;">
+            <div>
+              <div style="font-size:17px; font-weight:900; color:#FFFFFF;">${p.couponsIssued}</div>
+              <div style="font-size:10px; color:var(--trava-muted); font-weight:800;">ISSUED</div>
+            </div>
+            <div>
+              <div style="font-size:17px; font-weight:900; color:#34D399;">${p.couponsRedeemed}</div>
+              <div style="font-size:10px; color:var(--trava-muted); font-weight:800;">REDEEMED</div>
+            </div>
+            <div>
+              <div style="font-size:17px; font-weight:900; color:#FBBF24;">₹${p.totalCashbackPaid}</div>
+              <div style="font-size:10px; color:var(--trava-muted); font-weight:800;">CASHBACK</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button type="button" class="btn-sm btn-sm-ghost" onclick="openEditPartnerModal('${p.id}', '${escapeHtml(p.name)}', '${p.category}', '${escapeHtml(p.owner)}', '${p.phone || ''}', '${escapeHtml(p.location)}', '${escapeHtml(p.activeOffer)}', ${p.rating})">
+              ✏️ Edit Partner
+            </button>
+            <button type="button" class="btn-sm btn-sm-danger" onclick="deletePartner('${p.id}', '${escapeHtml(p.name)}')">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderFleet(fleet) {
+      const tbody = document.getElementById('tbody-fleet');
+      if (!tbody) return;
+
+      tbody.innerHTML = fleet.map(b => {
+        const isGovt = b.operatorType === 'GOVERNMENT';
+        return `
+          <tr>
+            <td>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:22px;">🚌</span>
+                <div>
+                  <strong style="color:#FFFFFF;">${escapeHtml(b.busNumber)}</strong>
+                  <div style="font-size:11px; color:var(--trava-muted);">${b.vehicleReg || 'TN 38 N 2481'}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="pill ${isGovt ? 'pill-indigo' : 'pill-amber'}">
+                ${isGovt ? '🏛️ TNSTC Government' : '🏢 Private Express'}
+              </span>
+            </td>
+            <td>
+              <strong style="color:#FFFFFF;">${escapeHtml(b.routeName || b.routeId)}</strong>
+              <div style="font-size:11px; color:var(--trava-muted);">${b.origin} → ${b.destination}</div>
+            </td>
+            <td>
+              <strong style="color:#34D399;">${b.speedKmH || 32} km/h</strong>
+            </td>
+            <td>
+              <select class="form-control" style="padding:5px 8px; font-size:12px; width:auto;" onchange="overrideBusCrowd('${b.id}', this.value)">
+                <option value="EMPTY" ${b.crowdStatus === 'EMPTY' ? 'selected' : ''}>🟢 Empty Seats</option>
+                <option value="SEATS_AVAILABLE" ${b.crowdStatus === 'SEATS_AVAILABLE' ? 'selected' : ''}>🟡 Seats Available</option>
+                <option value="STANDING_ONLY" ${b.crowdStatus === 'STANDING_ONLY' ? 'selected' : ''}>🟠 Standing Only</option>
+                <option value="FULL" ${b.crowdStatus === 'FULL' ? 'selected' : ''}>🔴 Packed Full</option>
+              </select>
+            </td>
+            <td>
+              <span class="pill pill-green">
+                <span class="pulse-dot" style="width:6px; height:6px;"></span> LIVE BROADCAST
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderCoupons(coupons) {
+      const tbody = document.getElementById('tbody-coupons');
+      if (!tbody) return;
+
+      tbody.innerHTML = coupons.map(c => {
+        let pillClass = 'pill-green';
+        if (c.status === 'REDEEMED') pillClass = 'pill-amber';
+        if (c.status === 'EXPIRED') pillClass = 'pill-gray';
+
+        return `
+          <tr>
+            <td>
+              <code style="background:rgba(16,185,129,0.15); color:#34D399; padding:4px 8px; border-radius:6px; font-weight:800; border:1px solid rgba(16,185,129,0.3);">
+                ${c.code}
+              </code>
+            </td>
+            <td>
+              <strong style="color:#FFFFFF;">${escapeHtml(c.customerName || 'Commuter')}</strong>
+              <div style="font-size:11px; color:var(--trava-muted);">${c.customerPhone || ''}</div>
+            </td>
+            <td>
+              <strong style="color:#FFFFFF;">${escapeHtml(c.merchantName || 'Annapoorna Bakery')}</strong>
+              <div style="font-size:11px; color:var(--trava-muted);">${c.category || 'BAKERY'}</div>
+            </td>
+            <td>
+              <strong style="color:#34D399;">₹${c.cashbackAmount || c.discountAmount || 150} Cashback</strong>
+              <div style="font-size:11px; color:var(--trava-muted);">Min Spend: ₹${c.minSpend || 500}</div>
+            </td>
+            <td>
+              <span class="pill ${pillClass}">● ${c.status}</span>
+            </td>
+            <td style="font-size:12px; color:var(--trava-muted);">
+              ${c.expiresAt ? c.expiresAt.substring(0, 10) : '31 Dec 2026'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderRedemptions(redemptions) {
+      const tbody = document.getElementById('tbody-redemptions');
+      if (!tbody) return;
+
+      tbody.innerHTML = redemptions.map(r => `
+        <tr>
+          <td><code style="font-weight:800; color:var(--trava-muted);">${r.id}</code></td>
+          <td><code style="font-weight:900; color:#34D399;">${r.couponCode}</code></td>
+          <td><strong style="color:#FFFFFF;">${escapeHtml(r.customerName)}</strong></td>
+          <td><strong style="color:#FFFFFF;">${escapeHtml(r.merchantInfo)}</strong></td>
+          <td><span style="font-weight:800; color:#FBBF24;">₹${r.cashbackAmount} Cashback</span></td>
+          <td style="font-size:12px; color:var(--trava-muted);">${new Date(r.redeemedAt).toLocaleString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Commuter CRUD Handlers
+    function openCreateCommuterModal() {
+      document.getElementById('modal-create-commuter').classList.add('active');
+    }
+    function closeCreateCommuterModal() {
+      document.getElementById('modal-create-commuter').classList.remove('active');
+    }
+
+    async function submitCreateCommuter() {
+      const fullName = document.getElementById('cr-comm-name').value.trim();
+      const email = document.getElementById('cr-comm-email').value.trim();
+      const phone = document.getElementById('cr-comm-phone').value.trim();
+      const pointsBalance = document.getElementById('cr-comm-points').value;
+      const role = document.getElementById('cr-comm-role').value;
+
+      if (!fullName || !email) {
+        showToast('Please provide Name and Email', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/commuters`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, email, phone, pointsBalance, role })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(`Commuter ${fullName} created successfully`);
+          closeCreateCommuterModal();
+          syncAllData();
+        } else {
+          showToast(res.message, 'error');
+        }
+      } catch (err) {
+        showToast('Failed to create commuter: ' + err.message, 'error');
+      }
+    }
+
+    function openEditCommuterModal(id, name, email, phone, points, role) {
+      document.getElementById('ed-comm-id').value = id;
+      document.getElementById('ed-comm-name').value = name;
+      document.getElementById('ed-comm-email').value = email;
+      document.getElementById('ed-comm-phone').value = phone;
+      document.getElementById('ed-comm-points').value = points;
+      document.getElementById('ed-comm-role').value = role;
+      document.getElementById('modal-edit-commuter').classList.add('active');
+    }
+    function closeEditCommuterModal() {
+      document.getElementById('modal-edit-commuter').classList.remove('active');
+    }
+
+    async function submitEditCommuter() {
+      const id = document.getElementById('ed-comm-id').value;
+      const fullName = document.getElementById('ed-comm-name').value.trim();
+      const email = document.getElementById('ed-comm-email').value.trim();
+      const phone = document.getElementById('ed-comm-phone').value.trim();
+      const pointsBalance = document.getElementById('ed-comm-points').value;
+      const role = document.getElementById('ed-comm-role').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/commuters/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, email, phone, pointsBalance, role })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(`Updated commuter ${fullName}`);
+          closeEditCommuterModal();
+          syncAllData();
+        } else {
+          showToast(res.message, 'error');
+        }
+      } catch (err) {
+        showToast('Failed to update commuter: ' + err.message, 'error');
+      }
+    }
+
+    async function deleteCommuter(id, name) {
+      if (!confirm(`Are you sure you want to delete commuter "${name}"?`)) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/commuters/${id}`, { method: 'DELETE' }).then(r => r.json());
+        if (res.success) {
+          showToast(`Deleted commuter ${name}`);
+          syncAllData();
+        } else {
+          showToast(res.message, 'error');
+        }
+      } catch (err) {
+        showToast('Failed to delete: ' + err.message, 'error');
+      }
+    }
+
+    // Partner CRUD Handlers
+    function openEditPartnerModal(id, name, cat, owner, phone, loc, offer, rating) {
+      document.getElementById('ed-part-id').value = id;
+      document.getElementById('ed-part-name').value = name;
+      document.getElementById('ed-part-cat').value = cat;
+      document.getElementById('ed-part-owner').value = owner;
+      document.getElementById('ed-part-phone').value = phone || '+91 98422 00000';
+      document.getElementById('ed-part-loc').value = loc;
+      document.getElementById('ed-part-offer').value = offer;
+      document.getElementById('ed-part-rating').value = rating;
+      document.getElementById('modal-edit-partner').classList.add('active');
+    }
+    function closeEditPartnerModal() {
+      document.getElementById('modal-edit-partner').classList.remove('active');
+    }
+
+    async function submitEditPartner() {
+      const id = document.getElementById('ed-part-id').value;
+      const name = document.getElementById('ed-part-name').value.trim();
+      const category = document.getElementById('ed-part-cat').value;
+      const owner = document.getElementById('ed-part-owner').value.trim();
+      const phone = document.getElementById('ed-part-phone').value.trim();
+      const location = document.getElementById('ed-part-loc').value.trim();
+      const activeOffer = document.getElementById('ed-part-offer').value.trim();
+      const rating = document.getElementById('ed-part-rating').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/partners/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, category, owner, phone, location, activeOffer, rating })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(`Updated merchant partner ${name}`);
+          closeEditPartnerModal();
+          syncAllData();
+        } else {
+          showToast(res.message, 'error');
+        }
+      } catch (err) {
+        showToast('Failed to update partner: ' + err.message, 'error');
+      }
+    }
+
+    async function deletePartner(id, name) {
+      if (!confirm(`Are you sure you want to delete partner "${name}"?`)) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/partners/${id}`, { method: 'DELETE' }).then(r => r.json());
+        if (res.success) {
+          showToast(`Deleted merchant partner ${name}`);
+          syncAllData();
+        } else {
+          showToast(res.message, 'error');
+        }
+      } catch (err) {
+        showToast('Failed to delete partner: ' + err.message, 'error');
+      }
+    }
+
+    // Commuter Ride History Modal Handlers
+    async function viewCommuterRides(commuterId, commuterName) {
+      document.getElementById('rh-modal-title').innerText = `📜 Ride History · ${commuterName}`;
+      document.getElementById('rh-passenger-name').innerText = commuterName;
+      document.getElementById('rh-total-rides').innerText = '...';
+      document.getElementById('rh-total-distance').innerText = '...';
+      document.getElementById('rh-total-points').innerText = '...';
+      
+      const listContainer = document.getElementById('rh-rides-list');
+      listContainer.innerHTML = '<div style="text-align:center; padding:30px; color:var(--trava-muted);">Loading verified ride history...</div>';
+      
+      document.getElementById('modal-ride-history').classList.add('active');
+
+      try {
+        let rides = [];
+        const res = await fetch(`${API_BASE}/commuters/${commuterId}/rides`).then(r => r.json()).catch(() => null);
+        if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+          rides = res.data;
+        } else {
+          // Fallback to commuter recentRides in memory
+          const commuter = adminState.data.commuters.find(c => c.id === commuterId);
+          if (commuter && Array.isArray(commuter.recentRides)) {
+            rides = commuter.recentRides;
+          }
+        }
+
+        const totalDist = rides.reduce((sum, r) => sum + (parseFloat(r.distanceKm) || 0), 0);
+        const totalPts = rides.reduce((sum, r) => sum + (parseInt(r.pointsAwarded) || 0), 0);
+
+        document.getElementById('rh-total-rides').innerText = `${rides.length} ${rides.length === 1 ? 'Ride' : 'Rides'}`;
+        document.getElementById('rh-total-distance').innerText = `${totalDist.toFixed(1)} km`;
+        document.getElementById('rh-total-points').innerText = `${totalPts} pts`;
+
+        if (!rides || rides.length === 0) {
+          listContainer.innerHTML = `
+            <div style="text-align:center; padding:40px 20px; background:rgba(255,255,255,0.02); border-radius:12px; border:1px dashed var(--trava-border);">
+              <div style="font-size:32px; margin-bottom:8px;">🚌</div>
+              <div style="font-weight:800; font-size:15px; margin-bottom:4px; color:#FFFFFF;">No Transit Rides Recorded Yet</div>
+              <div style="font-size:12.5px; color:var(--trava-muted); max-width:380px; margin:0 auto;">
+                When this commuter completes trips on Coimbatore buses (TNSTC or Private) and validates their ticket or live GPS, verified journeys will automatically appear here.
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        listContainer.innerHTML = rides.map(r => {
+          const isGovt = r.operatorType === 'GOVERNMENT';
+          const operatorPill = isGovt 
+            ? '<span class="pill pill-green" style="font-size:10px; padding:2px 7px;">TNSTC</span>' 
+            : '<span class="pill pill-amber" style="font-size:10px; padding:2px 7px;">PRIVATE</span>';
+          
+          const verificationLabel = r.verificationMode === 'AI_VISION_TICKET_CHECK'
+            ? '📸 AI Vision Ticket Check'
+            : (r.verificationMode === 'LIVE_GPS_CONTRIBUTION' ? '📡 Live GPS Telemetry' : '✓ Verified');
+
+          const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) : 'Recently';
+
+          return `
+            <div class="ride-card">
+              <div class="ride-card-header">
+                <div>
+                  <div class="ride-bus-title">
+                    <span>🚌 ${escapeHtml(r.busNumber || 'Coimbatore City Bus')}</span>
+                    <span class="ride-reg-badge">${escapeHtml(r.vehicleReg || 'TN 38')}</span>
+                    ${operatorPill}
+                  </div>
+                  <div class="ride-route-label">${escapeHtml(r.routeName || 'Coimbatore Transit Route')}</div>
+                </div>
+                <div style="text-align:right;">
+                  <span class="pill pill-green" style="font-size:10px; padding:2px 7px;">● COMPLETED</span>
+                  <div style="font-size:11px; color:var(--trava-muted); margin-top:3px;">${dateStr}</div>
+                </div>
+              </div>
+
+              <div class="ride-stops-grid">
+                <div class="ride-stop-point">
+                  <span class="ride-stop-type">🟢 Boarding Stop</span>
+                  <span class="ride-stop-name">${escapeHtml(r.boardingStopName || 'Origin Terminus')}</span>
+                </div>
+                <div class="ride-stop-point">
+                  <span class="ride-stop-type">🏁 Destination Stop</span>
+                  <span class="ride-stop-name">${escapeHtml(r.destinationStopName || 'Destination Terminus')}</span>
+                </div>
+              </div>
+
+              <div class="ride-metrics-bar">
+                <div class="ride-metric-item">
+                  <span>📏 Distance:</span> <strong>${r.distanceKm || '0'} km</strong>
+                </div>
+                <div class="ride-metric-item">
+                  <span>⏱️ Duration:</span> <strong>${r.durationMinutes || '0'} mins</strong>
+                </div>
+                <div class="ride-metric-item">
+                  <span>🎫 Fare:</span> <strong>₹${r.fareAmount || '15'}</strong>
+                </div>
+                <div class="ride-metric-item" style="color:#10B981;">
+                  <span>⭐ Earned:</span> <strong>+${r.pointsAwarded || '20'} pts</strong>
+                </div>
+                <div class="ride-metric-item" style="margin-left:auto; font-size:11px; color:#A5B4FC;">
+                  ${verificationLabel}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        listContainer.innerHTML = `<div style="text-align:center; padding:24px; color:#F87171;">Failed to load ride history: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function closeRideHistoryModal() {
+      document.getElementById('modal-ride-history').classList.remove('active');
+    }
+
+    // Modal points & onboarding
+    function openPointsModal(id, name, points) {
+      adminState.selectedCommuterId = id;
+      document.getElementById('pt-user-name').innerText = name;
+      document.getElementById('pt-user-balance').innerText = `${points} pts`;
+      document.getElementById('modal-award-points').classList.add('active');
+    }
+    function closePointsModal() {
+      document.getElementById('modal-award-points').classList.remove('active');
+    }
+
+    async function submitPointsAward() {
+      const delta = document.getElementById('pt-amount-input').value;
+      const reason = document.getElementById('pt-reason-input').value;
+      try {
+        const res = await fetch(`${API_BASE}/commuters/${adminState.selectedCommuterId}/points`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pointsDelta: delta, reason })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(`Awarded +${delta} points`);
+          closePointsModal();
+          syncAllData();
+        }
+      } catch (err) {
+        showToast('Error awarding points: ' + err.message, 'error');
+      }
+    }
+
+    function openOnboardModal() {
+      document.getElementById('modal-onboard-partner').classList.add('active');
+    }
+    function closeOnboardModal() {
+      document.getElementById('modal-onboard-partner').classList.remove('active');
+    }
+
+    async function submitOnboardPartner() {
+      const name = document.getElementById('ob-name').value;
+      const category = document.getElementById('ob-cat').value;
+      const owner = document.getElementById('ob-owner').value;
+      const location = document.getElementById('ob-loc').value;
+      const offer = document.getElementById('ob-offer').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/partners`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, category, owner, location, activeOffer: offer })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(`Merchant partner ${name} registered!`);
+          closeOnboardModal();
+          syncAllData();
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    function openIssueModal() {
+      document.getElementById('modal-issue-voucher').classList.add('active');
+    }
+    function closeIssueModal() {
+      document.getElementById('modal-issue-voucher').classList.remove('active');
+    }
+
+    async function submitIssueVoucher() {
+      const customerName = document.getElementById('iss-name').value;
+      const merchantName = document.getElementById('iss-merchant').value;
+      const cashback = document.getElementById('iss-val').value;
+      const minSpend = document.getElementById('iss-min').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/coupons`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ customerName, merchantName, cashbackAmount: cashback, minSpend })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(`Voucher ${res.data.code} issued!`);
+          closeIssueModal();
+          syncAllData();
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function overrideBusCrowd(busId, crowdStatus) {
+      try {
+        const res = await fetch(`${API_BASE}/fleet/${busId}/crowd`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ crowdStatus })
+        }).then(r => r.json());
+
+        if (res.success) {
+          showToast(`Bus telemetry updated to ${crowdStatus}`);
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function confirmResetPlatform() {
+      if (!confirm('Reset Trava demo vouchers and test data to clean state?')) return;
+      try {
+        await fetch(`${API_BASE}/reset-demo`, { method: 'POST' });
+        showToast('Demo state reset successfully');
+        syncAllData();
+      } catch (err) {
+        showToast('Error: ' + err.message);
+      }
+    }
+
+    function showToast(msg, type = 'success') {
+      const shelf = document.getElementById('toast-shelf');
+      if (!shelf) return;
+      const t = document.createElement('div');
+      t.className = 'toast-msg';
+      t.innerHTML = `<span>${type === 'error' ? '⚠️' : '✓'}</span><span>${escapeHtml(msg)}</span>`;
+      shelf.appendChild(t);
+      setTimeout(() => {
+        t.style.opacity = '0';
+        setTimeout(() => t.remove(), 300);
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag));
+    }
+  </script>
+</body>
+</html>

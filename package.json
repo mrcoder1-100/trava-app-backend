@@ -1,0 +1,14 @@
+{
+  "name": "trava",
+  "version": "1.0.0",
+  "description": "Trava - People Solving People's Problem",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "build": "npm --prefix backend install",
+    "test": "npm --prefix backend test"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRAVA Partner Portal | Annapoorna Bakery & Merchant Hub</title>
+  <meta name="description" content="Trava Merchant Partner Portal for Bakeries, Restaurants, and Local Merchants in Coimbatore. Validate customer coupons, view customer lists, and process cashbacks.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Specific enhancements for Partner Portal */
+    .top-portal-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--trava-border);
+      margin-bottom: 8px;
+    }
+    .btn-switch-portal {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #F1F5F9;
+      color: var(--trava-charcoal);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 999px;
+      transition: all 0.2s;
+      border: 1px solid #CBD5E1;
+    }
+    .btn-switch-portal:hover {
+      background: var(--trava-emerald);
+      color: #FFFFFF;
+      border-color: var(--trava-emerald);
+    }
+    .active-portal-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #92400E;
+      background: #FEF3C7;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid #FDE68A;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-decorations">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
+
+  <div class="portal-container">
+    
+    <!-- Top Navigation Bar between Portals -->
+    <div class="top-portal-nav">
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <a href="index.html" class="btn-switch-portal" id="link-to-user-portal">
+          <span>👤 Commuter Portal</span>
+        </a>
+        <span class="active-portal-indicator">
+          <span class="live-dot dot"></span>
+          <span>🏪 Partner Merchant Portal Active</span>
+        </span>
+        <a href="admin.html" class="btn-switch-portal" id="link-to-admin-portal" style="background:#0F4C3A; color:#FFFFFF; border-color:#0F4C3A;">
+          <span>🛡️ Admin Command Center →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="portal-header">
+      <div class="logo-badge">
+        <span class="logo-icon">🏪</span>
+        <div class="brand-text">
+          <div class="brand-row">
+            <h1 class="brand-name">TRAVA PARTNER</h1>
+            <span class="city-pill">📍 Coimbatore Merchants</span>
+          </div>
+          <span class="tagline">People Solving People's Problem.</span>
+        </div>
+      </div>
+      <div class="portal-mode-badge" style="background: #FEF3C7; color: #92400E; border-color: #FDE68A;">
+        <span class="dot" style="background: #D97706;"></span> Merchant Portal
+      </div>
+    </header>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 1: PARTNER AUTH (LOGIN & REGISTER)                           -->
+    <!-- ================================================================= -->
+    <div id="partner-auth-screen" class="glass-card">
+      <div class="card-intro">
+        <div class="badge-tag partner-tag">🏪 Trava Partner Merchant Portal</div>
+        <h2 class="card-title">Merchant Partner Login & Registration</h2>
+        <p class="card-subtitle">
+          Welcome Coimbatore bakeries, restaurants, supermarkets, and fitness studios! Log in to verify customer reward coupons, review issued discount cards, and process cashbacks.
+        </p>
+      </div>
+
+      <!-- 1-Click Bakery Partner Demo Login -->
+      <div class="demo-quick-banner partner-quick">
+        <div class="demo-banner-content">
+          <span class="demo-badge-pill gold-badge">⚡ 1-Click Instant Demo</span>
+          <div class="demo-desc">
+            <strong>1-Click Demo Login as Annapoorna Bakery & Sweets</strong>
+            <p>Gandhipuram Central Bus Stand Terminal · Owner: Sundar Raman</p>
+          </div>
+        </div>
+        <button type="button" class="btn-demo-quick btn-gold" id="btn-partner-demo-login" onclick="partnerDemoLogin()">
+          <span>🥐 Sign In as Annapoorna Bakery</span>
+          <span class="arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Auth Tabs: Sign In / Register -->
+      <div class="tab-strip">
+        <button type="button" class="tab-btn active" id="tab-signin-btn" onclick="switchTab('signin')">Partner Sign In</button>
+        <button type="button" class="tab-btn" id="tab-register-btn" onclick="switchTab('register')">Register New Partner Store</button>
+      </div>
+
+      <!-- Partner Sign In Form -->
+      <form id="partner-signin-form" class="auth-form" onsubmit="partnerFormLogin(event)">
+        <div class="form-group">
+          <label for="partner-email">Business Email / Partner ID</label>
+          <input type="email" id="partner-email" placeholder="bakery@annapoorna.trava" value="bakery@annapoorna.trava" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="partner-password">Password</label>
+          <input type="password" id="partner-password" placeholder="Enter partner password" value="Partner123!" required autocomplete="current-password">
+        </div>
+        <button type="submit" id="signin-submit-btn" class="btn-primary btn-partner-theme w-full">
+          <span class="btn-text">Sign In to Partner Dashboard</span>
+          <span class="spinner" id="signin-spinner" style="display: none;"></span>
+        </button>
+      </form>
+
+      <!-- Partner Register Form -->
+      <form id="partner-register-form" class="auth-form" onsubmit="partnerFormRegister(event)" style="display: none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="reg-bizname">Business / Store Name</label>
+            <input type="text" id="reg-bizname" placeholder="e.g. Annapoorna Bakery & Sweets" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-category">Partner Category</label>
+            <select id="reg-category">
+              <option value="Bakery & Sweets">Bakery & Sweets</option>
+              <option value="Restaurant">Restaurant & Fast Food</option>
+              <option value="Supermarket">Supermarket & Groceries</option>
+              <option value="Gym & Fitness">Gym & Fitness Studio</option>
+              <option value="Cafe">Cafe & Beverages</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="reg-owner">Owner / Store Manager Name</label>
+            <input type="text" id="reg-owner" placeholder="e.g. Sundar Raman" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-location">Store Location / Landmark</label>
+            <input type="text" id="reg-location" placeholder="e.g. Gandhipuram Central Bus Stand" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="reg-email">Business Email</label>
+            <input type="email" id="reg-email" placeholder="store@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Password</label>
+            <input type="password" id="reg-password" placeholder="At least 6 characters" required minlength="6">
+          </div>
+        </div>
+        <button type="submit" id="register-submit-btn" class="btn-primary btn-partner-theme w-full">
+          <span class="btn-text">Register as Verified Trava Partner</span>
+          <span class="spinner" id="reg-spinner" style="display: none;"></span>
+        </button>
+      </form>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 2: PARTNER DASHBOARD (AFTER LOGIN)                           -->
+    <!-- ================================================================= -->
+    <div id="partner-dashboard-screen" class="dashboard-stack" style="display: none;">
+      
+      <!-- Store Banner Card -->
+      <div class="glass-card store-profile-card">
+        <div class="store-profile-header">
+          <div class="store-avatar-group">
+            <div class="store-avatar">🥐</div>
+            <div>
+              <div class="store-title-row">
+                <h2 class="store-title" id="dash-store-name">Annapoorna Bakery & Sweets</h2>
+                <span class="badge-role partner-verified-badge">⭐ Verified Trava Partner</span>
+              </div>
+              <p class="store-subtitle" id="dash-store-meta">
+                <span id="dash-store-category">Bakery & Sweets</span> · 
+                <span id="dash-store-location">Gandhipuram Central Bus Stand Terminal, Coimbatore</span> · 
+                <span class="partner-id" id="dash-store-id">ID: TRV-BAKE-042</span>
+              </p>
+              <p class="store-owner-row">
+                Owner: <strong id="dash-store-owner">Sundar Raman</strong> · 
+                Terminal: <strong>Counter #1 (Main Cashier)</strong>
+              </p>
+            </div>
+          </div>
+          <div class="store-actions">
+            <button type="button" class="btn-ghost" onclick="partnerLogout()">
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Metric Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Total Issued Coupons</span>
+            <span class="kpi-value" id="dash-kpi-total">5</span>
+            <span class="kpi-sub">Issued to transit commuters</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Active & Redeemable</span>
+            <span class="kpi-value highlight-green" id="dash-kpi-active">4</span>
+            <span class="kpi-sub">Ready to avail in-store</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Redeemed Today</span>
+            <span class="kpi-value highlight-gold" id="dash-kpi-redeemed">1</span>
+            <span class="kpi-sub">Processed at Counter #1</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Customer Value</span>
+            <span class="kpi-value" id="dash-kpi-value">₹700</span>
+            <span class="kpi-sub">Driving ₹2,500+ store spend</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- CUSTOMERS ISSUED COUPON CARDS (4 to 5 Customers requested)     -->
+      <!-- =============================================================== -->
+      <div class="glass-card customer-coupons-card">
+        <div class="section-title-bar">
+          <div>
+            <div class="badge-tag gold-tag">👥 Issued Commuter Coupon Cards</div>
+            <h3 class="section-title">Customers Issued Coupon Cards for Annapoorna Bakery</h3>
+            <p class="section-subtitle">
+              The 5 Coimbatore bus commuters below hold eligible cashback coupon cards for your bakery. 
+              Inspect their minimum spend terms (e.g. <strong>Buy above ₹500, get ₹125/₹150 cashback</strong>), validity timeframes, and click <strong>Verify & Redeem</strong> to apply the cashback at the cashier counter.
+            </p>
+          </div>
+          <div class="filter-pills">
+            <button type="button" class="filter-btn active" id="f-all" onclick="setFilter('ALL')">All Customers (5)</button>
+            <button type="button" class="filter-btn" id="f-active" onclick="setFilter('ACTIVE')">Active (4)</button>
+            <button type="button" class="filter-btn" id="f-redeemed" onclick="setFilter('REDEEMED')">Redeemed (1)</button>
+          </div>
+        </div>
+
+        <!-- Customer Cards Grid -->
+        <div class="customer-cards-grid" id="customer-cards-container">
+          <!-- Dynamically populated by JS -->
+        </div>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- CASHIER COUNTER VERIFICATION & INSTANT REDEMPTION CONSOLE      -->
+      <!-- =============================================================== -->
+      <div class="glass-card verification-console-card">
+        <div class="card-intro">
+          <div class="badge-tag live-tag">⚡ Live Cashier Verification Engine</div>
+          <h3 class="card-title">Coupon Verification & Counter Redemption</h3>
+          <p class="card-subtitle">Enter any coupon code provided by the customer or click "Verify & Redeem" on any customer card above.</p>
+        </div>
+
+        <!-- Quick Test Pills -->
+        <div class="demo-pills-container">
+          <span class="demo-pills-label">Quick Test Coupon Codes:</span>
+          <div class="demo-pills">
+            <button type="button" class="pill-btn valid-pill" onclick="pickCode('TRAVA-BAKE-95A1')">
+              🥐 Sam: TRAVA-BAKE-95A1 (₹150 CB)
+            </button>
+            <button type="button" class="pill-btn valid-pill" onclick="pickCode('TRAVA-BAKE-PRIYA')">
+              🥐 Priya: TRAVA-BAKE-PRIYA (₹125 CB)
+            </button>
+            <button type="button" class="pill-btn valid-pill" onclick="pickCode('TRAVA-BAKE-KARTHIK')">
+              🥐 Karthik: TRAVA-BAKE-KARTHIK (₹150 CB)
+            </button>
+            <button type="button" class="pill-btn valid-pill" onclick="pickCode('TRAVA-BAKE-ANANYA')">
+              🥐 Ananya: TRAVA-BAKE-ANANYA (₹125 CB)
+            </button>
+            <button type="button" class="pill-btn used-pill" onclick="pickCode('TRAVA-BAKE-RAJESH')">
+              ✓ Rajesh: TRAVA-BAKE-RAJESH (Already Redeemed)
+            </button>
+            <button type="button" class="pill-btn expired-pill" onclick="pickCode('TRAVA-BAKE-EXPR')">
+              ✕ Expired: TRAVA-BAKE-EXPR
+            </button>
+          </div>
+        </div>
+
+        <!-- Code Input Form -->
+        <form id="verify-form" class="coupon-form" onsubmit="partnerVerifyCode(event)">
+          <label for="coupon-code-input" class="input-label">Enter Customer Coupon Code</label>
+          <div class="input-group">
+            <input 
+              type="text" 
+              id="coupon-code-input" 
+              placeholder="e.g. TRAVA-BAKE-95A1" 
+              autocomplete="off" 
+              spellcheck="false" 
+              required 
+            />
+            <button type="submit" id="verify-submit-btn" class="btn-primary btn-partner-theme">
+              <span class="btn-text">Verify Coupon</span>
+              <span class="spinner" id="v-spinner" style="display: none;"></span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Status Result Box -->
+        <div id="result-box" class="result-box result-hidden">
+          <div class="status-badge" id="status-badge">VALID</div>
+          <h3 class="result-heading" id="result-heading">Status Title</h3>
+          <p class="result-message" id="result-message">Status explanation text.</p>
+
+          <!-- Coupon Details Box (when valid) -->
+          <div id="coupon-details" class="coupon-details-box" style="display: none;">
+            <div class="detail-row highlight-row">
+              <span class="detail-label">Customer Name:</span>
+              <span class="detail-value highlight-customer" id="detail-customer-name">Sam (Route 95 Commuter)</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Offer Terms:</span>
+              <span class="detail-value highlight-offer" id="detail-offer-terms">Buy above ₹500, Get ₹150 Cashback</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Minimum Spend:</span>
+              <span class="detail-value" id="detail-min-spend">Order must exceed ₹500</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Cashback / Discount:</span>
+              <span class="detail-value highlight" id="detail-reward">₹150 Cashback</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Authorized Partner:</span>
+              <span class="detail-value" id="detail-merchant">Annapoorna Bakery & Sweets</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Valid Until:</span>
+              <span class="detail-value" id="detail-expiry">31 Dec 2026, 11:59 PM</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Security Code:</span>
+              <span class="detail-value code-font" id="detail-code">TRAVA-BAKE-95A1</span>
+            </div>
+
+            <!-- Live Net Bill Calculator Simulator -->
+            <div class="bill-calculator-box">
+              <div class="calc-title">🧾 Counter Bill Calculation Simulator</div>
+              <div class="calc-row">
+                <span>Customer Gross Bill:</span>
+                <div class="calc-input-wrap">
+                  <span>₹</span>
+                  <input type="number" id="calc-bill-input" value="650" min="0" oninput="recalcBill()">
+                </div>
+              </div>
+              <div class="calc-row">
+                <span>Trava Coupon Cashback:</span>
+                <span class="calc-deduction" id="calc-cashback-amount">- ₹150</span>
+              </div>
+              <div class="calc-divider"></div>
+              <div class="calc-row total-row">
+                <span>Net Amount to Collect:</span>
+                <span class="calc-total" id="calc-net-total">₹500</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Controls (Redeem Button) -->
+          <div id="action-controls" class="action-controls" style="display: none;">
+            <button type="button" id="redeem-btn" class="btn-redeem" onclick="partnerRedeemCode()">
+              <span class="btn-text">✓ Confirm & Mark as Redeemed</span>
+              <span class="spinner" id="r-spinner" style="display: none;"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer / Demo Reset Controls -->
+        <div class="card-footer">
+          <div class="merchant-badge">
+            <span>📍 Counter #1 · Annapoorna Bakery & Sweets (Gandhipuram Central)</span>
+          </div>
+          <button type="button" class="btn-reset-demo" onclick="resetDemoState()">
+            ↺ Reset Demo Data
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Global Footer -->
+    <footer class="portal-footer">
+      <p>Trava Partner Merchant Portal · Coimbatore City Transit Ecosystem</p>
+      <p class="subtext">Official Tagline: <em>People Solving People's Problem.</em></p>
+    </footer>
+  </div>
+
+  <!-- Partner Portal Client Logic -->
+  <script>
+    const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+      ? `${window.location.origin}/api/v1`
+      : 'http://localhost:5000/api/v1';
+
+    let currentPartner = null;
+    let validatedCoupon = null;
+    let currentFilter = 'ALL';
+
+    const INITIAL_CUSTOMERS = [
+      {
+        code: 'TRAVA-BAKE-95A1',
+        customerName: 'Sam (Route 95 Regular Commuter)',
+        commuterMeta: 'Daily Passenger · Seat 4A · Gandhipuram Central',
+        offerTitle: 'Buy above ₹500, Get ₹150 Cashback / Instant Off',
+        minSpend: 500,
+        cashbackAmount: 150,
+        expiresAt: '2026-12-31T23:59:59Z',
+        validityText: 'Valid till 31 Dec 2026 (72 days left)',
+        status: 'ACTIVE',
+        redeemedNote: null
+      },
+      {
+        code: 'TRAVA-BAKE-PRIYA',
+        customerName: 'Priya S. (Seat 14B Commuter)',
+        commuterMeta: 'Route 20C Passenger · Peelamedu ⇄ Gandhipuram',
+        offerTitle: 'Buy above ₹500, Get ₹125 Cashback / Instant Off',
+        minSpend: 500,
+        cashbackAmount: 125,
+        expiresAt: '2026-11-15T21:00:00Z',
+        validityText: 'Valid till 15 Nov 2026 (26 days left)',
+        status: 'ACTIVE',
+        redeemedNote: null
+      },
+      {
+        code: 'TRAVA-BAKE-KARTHIK',
+        customerName: 'Karthik V. (Express Route 111 Passenger)',
+        commuterMeta: 'Singanallur Daily Pass · Regular Patron',
+        offerTitle: 'Buy above ₹500, Get ₹150 Cashback on Fresh Breads & Sweets',
+        minSpend: 500,
+        cashbackAmount: 150,
+        expiresAt: '2026-10-28T22:00:00Z',
+        validityText: 'Valid till 28 Oct 2026 (Expiring Soon · 8 days left)',
+        status: 'ACTIVE',
+        redeemedNote: null
+      },
+      {
+        code: 'TRAVA-BAKE-ANANYA',
+        customerName: 'Ananya R. (Tidel Park Commuter)',
+        commuterMeta: 'Tech Park Corridor Commuter · Frequent Contributor',
+        offerTitle: 'Buy above ₹500, Get ₹125 Cashback on Celebration Cakes',
+        minSpend: 500,
+        cashbackAmount: 125,
+        expiresAt: '2026-12-20T20:30:00Z',
+        validityText: 'Valid till 20 Dec 2026 (61 days left)',
+        status: 'ACTIVE',
+        redeemedNote: null
+      },
+      {
+        code: 'TRAVA-BAKE-RAJESH',
+        customerName: 'Rajesh M. (Gandhipuram Evening Passenger)',
+        commuterMeta: 'Ukkadam Daily Commuter · Verified Contributor',
+        offerTitle: 'Buy above ₹500, Get ₹150 Cashback on Fresh Bakes & Savouries',
+        minSpend: 500,
+        cashbackAmount: 150,
+        expiresAt: '2026-10-10T21:30:00Z',
+        validityText: 'Redeemed on 10 Oct 2026',
+        status: 'REDEEMED',
+        redeemedNote: 'Redeemed at Counter #1 by cashier Sundar on 10 Oct 2026'
+      }
+    ];
+
+    let customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS));
+
+    // Tab Switcher between Sign In and Register
+    function switchTab(tab) {
+      const signinBtn = document.getElementById('tab-signin-btn');
+      const regBtn = document.getElementById('tab-register-btn');
+      const signinForm = document.getElementById('partner-signin-form');
+      const regForm = document.getElementById('partner-register-form');
+
+      if (tab === 'signin') {
+        signinBtn.classList.add('active');
+        regBtn.classList.remove('active');
+        signinForm.style.display = 'flex';
+        regForm.style.display = 'none';
+      } else {
+        regBtn.classList.add('active');
+        signinBtn.classList.remove('active');
+        regForm.style.display = 'flex';
+        signinForm.style.display = 'none';
+      }
+    }
+
+    // 1-Click Demo Login
+    function partnerDemoLogin() {
+      currentPartner = {
+        businessName: 'Annapoorna Bakery & Sweets',
+        ownerName: 'Sundar Raman',
+        category: 'Bakery & Sweets',
+        location: 'Shop #4, Gandhipuram Central Bus Stand Terminal, Coimbatore',
+        partnerId: 'TRV-BAKE-042'
+      };
+      showDashboard();
+    }
+
+    function partnerFormLogin(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      partnerDemoLogin();
+    }
+
+    function partnerFormRegister(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const biz = document.getElementById('reg-bizname').value.trim() || 'Annapoorna Bakery & Sweets';
+      const owner = document.getElementById('reg-owner').value.trim() || 'Sundar Raman';
+      const cat = document.getElementById('reg-category').value;
+      const loc = document.getElementById('reg-location').value.trim() || 'Gandhipuram Central, Coimbatore';
+
+      currentPartner = {
+        businessName: biz,
+        ownerName: owner,
+        category: cat,
+        location: loc,
+        partnerId: 'TRV-BAKE-042'
+      };
+      alert(`Welcome, ${owner}! ${biz} is now logged into the Trava Partner Console.`);
+      showDashboard();
+    }
+
+    function partnerLogout() {
+      currentPartner = null;
+      document.getElementById('partner-auth-screen').style.display = 'flex';
+      document.getElementById('partner-dashboard-screen').style.display = 'none';
+    }
+
+    function showDashboard() {
+      document.getElementById('partner-auth-screen').style.display = 'none';
+      document.getElementById('partner-dashboard-screen').style.display = 'flex';
+
+      document.getElementById('dash-store-name').textContent = currentPartner.businessName;
+      document.getElementById('dash-store-category').textContent = currentPartner.category;
+      document.getElementById('dash-store-location').textContent = currentPartner.location;
+      document.getElementById('dash-store-owner').textContent = currentPartner.ownerName;
+
+      renderCustomers(currentFilter);
+      updateKPIs();
+      recalcBill();
+    }
+
+    function updateKPIs() {
+      const total = customers.length;
+      const active = customers.filter(c => c.status === 'ACTIVE').length;
+      const redeemed = customers.filter(c => c.status === 'REDEEMED').length;
+      const val = customers.reduce((sum, c) => sum + c.cashbackAmount, 0);
+
+      document.getElementById('dash-kpi-total').textContent = total;
+      document.getElementById('dash-kpi-active').textContent = active;
+      document.getElementById('dash-kpi-redeemed').textContent = redeemed;
+      document.getElementById('dash-kpi-value').textContent = `₹${val}`;
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.getElementById('f-all').classList.toggle('active', filter === 'ALL');
+      document.getElementById('f-active').classList.toggle('active', filter === 'ACTIVE');
+      document.getElementById('f-redeemed').classList.toggle('active', filter === 'REDEEMED');
+      renderCustomers(filter);
+    }
+
+    function renderCustomers(filter) {
+      const container = document.getElementById('customer-cards-container');
+      let list = customers;
+      if (filter === 'ACTIVE') list = customers.filter(c => c.status === 'ACTIVE');
+      else if (filter === 'REDEEMED') list = customers.filter(c => c.status === 'REDEEMED');
+
+      container.innerHTML = list.map(c => {
+        const isRed = c.status === 'REDEEMED';
+        const isExp = c.validityText.includes('Expiring Soon');
+        const cardClass = isRed ? 'card-redeemed' : (isExp ? 'card-expiring' : 'card-active');
+        const badgeClass = isRed ? 'badge-redeemed' : (isExp ? 'badge-expiring' : 'badge-active');
+        const badgeText = isRed ? 'REDEEMED' : (isExp ? 'EXPIRING SOON' : 'ACTIVE');
+
+        return `
+          <div class="customer-card ${cardClass}">
+            <div class="customer-header">
+              <div class="customer-name-group">
+                <h4 class="cust-name">${c.customerName}</h4>
+                <span class="cust-meta">${c.commuterMeta}</span>
+              </div>
+              <span class="cust-badge ${badgeClass}">${badgeText}</span>
+            </div>
+            <div class="customer-body">
+              <div class="offer-title">${c.offerTitle}</div>
+              <div class="offer-rule-pill">
+                <span>🏷️ Min Spend: ₹${c.minSpend}</span>
+                <span>·</span>
+                <span>Cashback: ₹${c.cashbackAmount}</span>
+              </div>
+              <div class="offer-meta-grid">
+                <div class="meta-item">
+                  <span class="meta-label">Code</span>
+                  <span class="code-chip">${c.code}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Valid Until</span>
+                  <span class="meta-val">${c.validityText}</span>
+                </div>
+              </div>
+            </div>
+            <div class="customer-footer">
+              ${isRed ? `
+                <div class="redeemed-note">✓ ${c.redeemedNote || 'Redeemed at Counter #1'}</div>
+              ` : `
+                <button type="button" class="btn-quick-verify" onclick="pickCode('${c.code}')">
+                  <span>⚡ Verify & Redeem at Counter</span>
+                  <span>→</span>
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function pickCode(code) {
+      const inp = document.getElementById('coupon-code-input');
+      inp.value = code;
+      inp.focus();
+      inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      partnerVerifyCode();
+    }
+
+    async function partnerVerifyCode(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const code = (document.getElementById('coupon-code-input').value || '').trim().toUpperCase();
+      if (!code) return;
+
+      const btn = document.getElementById('verify-submit-btn');
+      const btnText = btn.querySelector('.btn-text');
+      const spinner = document.getElementById('v-spinner');
+
+      btnText.style.display = 'none';
+      spinner.style.display = 'inline-block';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${API_BASE}/coupons/validate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        });
+        const data = await res.json();
+        showResult(data, code);
+      } catch (err) {
+        // Fallback for standalone preview
+        const found = customers.find(c => c.code === code);
+        if (found) {
+          if (found.status === 'REDEEMED') showResult({ status: 'ALREADY_USED' }, code);
+          else showResult({ status: 'VALID', coupon: found }, code);
+        } else if (code === 'TRAVA-BAKE-EXPR') {
+          showResult({ status: 'EXPIRED' }, code);
+        } else {
+          showResult({ status: 'INVALID_COUPON' }, code);
+        }
+      } finally {
+        btnText.style.display = 'inline-block';
+        spinner.style.display = 'none';
+        btn.disabled = false;
+      }
+    }
+
+    function showResult(data, code) {
+      const box = document.getElementById('result-box');
+      const badge = document.getElementById('status-badge');
+      const head = document.getElementById('result-heading');
+      const msg = document.getElementById('result-message');
+      const details = document.getElementById('coupon-details');
+      const actions = document.getElementById('action-controls');
+
+      box.className = 'result-box';
+      const cust = customers.find(c => c.code === code);
+
+      if (data.status === 'VALID') {
+        validatedCoupon = data.coupon || cust;
+        box.classList.add('result-valid');
+        badge.textContent = 'VALID';
+        head.textContent = 'Coupon Validated Successfully';
+        msg.textContent = 'Coupon is active, authentic, and eligible for instant counter cashback.';
+
+        const name = (data.coupon && data.coupon.customerName) || (cust ? cust.customerName : 'Sam (Route 95 Commuter)');
+        const offer = (data.coupon && data.coupon.offerDetails) || (cust ? cust.offerTitle : 'Buy above ₹500, Get ₹150 Cashback');
+        const min = (data.coupon && data.coupon.minSpend) || (cust ? cust.minSpend : 500);
+        const cb = (data.coupon && data.coupon.cashbackAmount) || (cust ? cust.cashbackAmount : 150);
+
+        document.getElementById('detail-customer-name').textContent = name;
+        document.getElementById('detail-offer-terms').textContent = offer;
+        document.getElementById('detail-min-spend').textContent = `Order bill must exceed ₹${min}`;
+        document.getElementById('detail-reward').textContent = `₹${cb} Cashback / Instant Off`;
+        document.getElementById('detail-code').textContent = code;
+
+        recalcBill(cb);
+        details.style.display = 'flex';
+        actions.style.display = 'block';
+      } else if (data.status === 'ALREADY_USED') {
+        box.classList.add('result-used');
+        badge.textContent = 'ALREADY REDEEMED';
+        head.textContent = 'Coupon Already Redeemed';
+        msg.textContent = 'This coupon has already been redeemed and cannot be processed again.';
+        details.style.display = 'none';
+        actions.style.display = 'none';
+      } else if (data.status === 'EXPIRED') {
+        box.classList.add('result-expired');
+        badge.textContent = 'EXPIRED';
+        head.textContent = 'Coupon Has Expired';
+        msg.textContent = 'This coupon has passed its validity date and can no longer be honored.';
+        details.style.display = 'none';
+        actions.style.display = 'none';
+      } else {
+        box.classList.add('result-invalid');
+        badge.textContent = 'INVALID CODE';
+        head.textContent = 'Invalid Coupon Code';
+        msg.textContent = 'This code was not found in the Trava transit merchant database.';
+        details.style.display = 'none';
+        actions.style.display = 'none';
+      }
+    }
+
+    function recalcBill(overrideCb = null) {
+      const gross = parseFloat(document.getElementById('calc-bill-input').value) || 0;
+      let cb = overrideCb;
+      if (cb === null) {
+        cb = validatedCoupon ? (validatedCoupon.cashbackAmount || 150) : 150;
+      }
+      document.getElementById('calc-cashback-amount').textContent = `- ₹${cb}`;
+      const net = Math.max(0, gross - cb);
+      document.getElementById('calc-net-total').textContent = `₹${net}`;
+    }
+
+    async function partnerRedeemCode() {
+      if (!validatedCoupon) return;
+      const code = validatedCoupon.code;
+      const custName = validatedCoupon.customerName || 'Customer';
+
+      const ok = confirm(`Confirm redemption for ${custName}?\n\nCode: ${code}\nThis will mark the coupon as permanently redeemed.`);
+      if (!ok) return;
+
+      const btn = document.getElementById('redeem-btn');
+      btn.disabled = true;
+
+      try {
+        await fetch(`${API_BASE}/coupons/redeem`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, merchantInfo: 'Annapoorna Bakery Counter #1' })
+        });
+      } catch (err) {}
+
+      // Update local state
+      const target = customers.find(c => c.code === code);
+      if (target) {
+        target.status = 'REDEEMED';
+        target.redeemedNote = `Redeemed at Counter #1 on ${new Date().toLocaleDateString('en-IN')}`;
+      }
+
+      renderCustomers(currentFilter);
+      updateKPIs();
+      btn.disabled = false;
+      alert(`✓ Success! Coupon "${code}" for ${custName} marked as redeemed!`);
+      partnerVerifyCode();
+    }
+
+    function resetDemoState() {
+      if (!confirm('Reset all coupons and simulation to original state?')) return;
+      fetch(`${API_BASE}/demo/reset`, { method: 'POST' }).catch(() => {});
+      customers = JSON.parse(JSON.stringify(INITIAL_CUSTOMERS));
+      renderCustomers(currentFilter);
+      updateKPIs();
+      document.getElementById('coupon-code-input').value = '';
+      document.getElementById('result-box').className = 'result-box result-hidden';
+      alert('Demo data successfully reset!');
+    }
+  </script>
+</body>
+</html>
