@@ -120,7 +120,7 @@ class _BusMapScreenState extends State<BusMapScreen> with TickerProviderStateMix
         currentLatitude: widget.bus.currentLatitude != 0 ? widget.bus.currentLatitude : defaultLat,
         currentLongitude: widget.bus.currentLongitude != 0 ? widget.bus.currentLongitude : defaultLng,
         bearing: widget.bus.bearing,
-        etaMinutes: widget.bus.etaMinutes >= 12 ? widget.bus.etaMinutes : 14,
+        etaMinutes: widget.bus.etaMinutes > 0 ? widget.bus.etaMinutes : 10,
         distanceRemainingKm: widget.bus.distanceRemainingKm >= 2.0 ? widget.bus.distanceRemainingKm : 4.5,
       );
     } else if (_currentBus.currentLatitude == 0 || _currentBus.currentLatitude < 5.0) {

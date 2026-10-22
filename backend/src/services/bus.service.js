@@ -71,9 +71,9 @@ class BusSimulationService {
           ? calculateETA(route.stops.slice().reverse(), 1.0 - newProgress, route.stops.length - 1, speedKmH)
           : calculateETA(route.stops, newProgress, destIndex, speedKmH);
 
-        const rawEta = eta ? eta.etaMinutes : 0;
-        const safeEta = rawEta < 12 ? Math.max(14, (rawEta || 0) + 11) : rawEta;
-        const safeDistance = Math.max(2.8, (eta && eta.distanceRemainingKm) ? eta.distanceRemainingKm : 3.5);
+        const rawEta = eta ? eta.etaMinutes : 10;
+        const safeEta = rawEta > 0 ? rawEta : 10;
+        const safeDistance = (eta && eta.distanceRemainingKm) ? eta.distanceRemainingKm : 3.5;
 
         db.update('bus_services', bus.id, {
           currentProgress: parseFloat(newProgress.toFixed(4)),

@@ -169,14 +169,12 @@ function calculateETA(stops, currentProgress, destStopIndex, averageSpeedKmH = 3
   // Add dwell time per remaining stop
   const stopsRemaining = Math.max(0, destStopIndex - Math.floor(currentProgress * (stops.length - 1)));
   const travelMinutes = (remainingKm / averageSpeedKmH) * 60;
-  const dwellMinutes = stopsRemaining * 0.75;
-  // Authentic city traffic congestion & signal wait delay (10-12 mins along Coimbatore arterial corridors)
-  const trafficDelayMinutes = 11;
-  const totalMinutes = Math.max(14, Math.round(travelMinutes + dwellMinutes + trafficDelayMinutes));
+  const dwellMinutes = stopsRemaining * 0.5;
+  const totalMinutes = Math.max(1, Math.round(travelMinutes + dwellMinutes));
 
   return {
-    etaMinutes: totalMinutes,
-    distanceRemainingKm: Math.max(2.8, parseFloat(remainingKm.toFixed(2))),
+    etaMinutes: totalMinutes > 0 ? totalMinutes : 10,
+    distanceRemainingKm: parseFloat(remainingKm.toFixed(2)),
     averageSpeedKmH
   };
 }

@@ -85,7 +85,7 @@ class _FeaturesTabState extends State<FeaturesTab> with TickerProviderStateMixin
     currentLatitude: 11.016844,
     currentLongitude: 76.967812,
     bearing: 45,
-    etaMinutes: 14,
+    etaMinutes: 10,
     distanceRemainingKm: 6.2,
   );
 
@@ -1768,8 +1768,9 @@ class _FeaturesTabState extends State<FeaturesTab> with TickerProviderStateMixin
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'org.trava.transit',
+                    urlTemplate: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+                    userAgentPackageName: 'com.trava.trava',
+                    maxZoom: 19,
                   ),
                   // Route 95 Polyline
                   PolylineLayer(
@@ -3003,8 +3004,9 @@ class _FeaturesTabState extends State<FeaturesTab> with TickerProviderStateMixin
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'org.trava.transit',
+                urlTemplate: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+                userAgentPackageName: 'com.trava.trava',
+                maxZoom: 19,
               ),
               // Route 95 Polyline
               PolylineLayer(

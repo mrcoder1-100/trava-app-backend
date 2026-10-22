@@ -512,7 +512,7 @@ class JsonDatabase {
         currentLatitude: 11.0160,
         currentLongitude: 76.9700,
         bearing: 110,
-        etaMinutes: 28,
+        etaMinutes: 10,
         activeJourneyId: 'jrn_sim_bus_a',
         lastUpdated: new Date().toISOString()
       },

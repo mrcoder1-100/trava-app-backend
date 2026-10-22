@@ -21,13 +21,13 @@
     "currentLatitude": 11.016,
     "currentLongitude": 76.97,
     "bearing": 110,
-    "etaMinutes": 28,
+    "etaMinutes": 10,
     "activeJourneyId": "jrn_sim_bus_a",
-    "lastUpdated": "2026-10-22T17:28:47.998Z",
+    "lastUpdated": "2026-10-22T18:12:30.329Z",
     "activeContributorId": "usr_torch_subagent_02",
     "activeContributorLabel": "Verified Passenger Contribution",
-    "torchPassedAt": "2026-10-22T17:28:48.021Z",
-    "updatedAt": "2026-10-22T17:28:48.021Z"
+    "torchPassedAt": "2026-10-22T18:12:30.350Z",
+    "updatedAt": "2026-10-22T18:12:30.350Z"
   },
   {
     "id": "bus_95_b",
@@ -53,7 +53,7 @@
     "bearing": 75,
     "etaMinutes": 20,
     "activeJourneyId": "jrn_sim_bus_b",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_95_c",
@@ -79,7 +79,7 @@
     "bearing": 95,
     "etaMinutes": 18,
     "activeJourneyId": "jrn_sim_bus_c",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_95_d",
@@ -105,7 +105,7 @@
     "bearing": 160,
     "etaMinutes": 14,
     "activeJourneyId": "jrn_sim_bus_d",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_111_a",
@@ -131,7 +131,7 @@
     "bearing": 210,
     "etaMinutes": 16,
     "activeJourneyId": "jrn_sim_111_a",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_111_b",
@@ -157,7 +157,7 @@
     "bearing": 195,
     "etaMinutes": 15,
     "activeJourneyId": "jrn_sim_111_b",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_20c_a",
@@ -183,7 +183,7 @@
     "bearing": 35,
     "etaMinutes": 22,
     "activeJourneyId": "jrn_sim_20c_a",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_20c_b",
@@ -209,7 +209,7 @@
     "bearing": 20,
     "etaMinutes": 16,
     "activeJourneyId": "jrn_sim_20c_b",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_70_a",
@@ -235,7 +235,7 @@
     "bearing": 250,
     "etaMinutes": 17,
     "activeJourneyId": "jrn_sim_70_a",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_70_b",
@@ -261,7 +261,7 @@
     "bearing": 230,
     "etaMinutes": 14,
     "activeJourneyId": "jrn_sim_70_b",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_10a_a",
@@ -287,7 +287,7 @@
     "bearing": 285,
     "etaMinutes": 19,
     "activeJourneyId": "jrn_sim_10a_a",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   },
   {
     "id": "bus_10a_b",
@@ -313,6 +313,6 @@
     "bearing": 295,
     "etaMinutes": 15,
     "activeJourneyId": "jrn_sim_10a_b",
-    "lastUpdated": "2026-10-22T17:28:47.998Z"
+    "lastUpdated": "2026-10-22T18:12:30.329Z"
   }
 ]
