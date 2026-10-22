@@ -66,7 +66,15 @@ app.get('/', (req, res) => {
 
 // Trava Core Flutter Web App assets at root
 if (fs.existsSync(travaCoreWebDir)) {
-  app.use(express.static(travaCoreWebDir));
+  app.use(express.static(travaCoreWebDir, {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.json')) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+      }
+    }
+  }));
 }
 
 // Admin Command Center Portal

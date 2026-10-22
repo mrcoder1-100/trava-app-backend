@@ -32,8 +32,21 @@
   <title>Trava — People Solving People's Problem</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Google Maps JavaScript API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY_HERE"></script>
+  <!-- Unregister any old service worker to immediately bust stale cache -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (let name of names) caches.delete(name);
+      });
+    }
+  </script>
 
   <!-- Trava Transit Voice Announcement Engine with Transit Station Chime -->
   <script>
@@ -254,6 +267,6 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
-  <script src="flutter_bootstrap.js" async></script>
+  <script src="flutter_bootstrap.js?v=20261022c" async></script>
 </body>
 </html>
