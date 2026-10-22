@@ -35,37 +35,45 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const fs = require('fs');
 
-// Serve Static Web Apps (Bakery & Super Admin)
+// Serve Static Web Apps (Bakery, Commuter & Super Admin)
 const bakeryWebDir = fs.existsSync(path.resolve(__dirname, '../../bakery-web'))
   ? path.resolve(__dirname, '../../bakery-web')
   : (fs.existsSync(path.resolve(__dirname, '../bakery-web')) ? path.resolve(__dirname, '../bakery-web') : path.resolve(__dirname, '../public'));
 
-const adminHtmlPath = fs.existsSync(path.resolve(__dirname, '../index.html'))
-  ? path.resolve(__dirname, '../index.html')
-  : (fs.existsSync(path.resolve(__dirname, '../admin.html')) ? path.resolve(__dirname, '../admin.html') : path.join(bakeryWebDir, 'admin.html'));
+const websiteHtmlPath = path.join(bakeryWebDir, 'index.html');
+const adminHtmlPath = path.join(bakeryWebDir, 'admin.html');
+const partnerHtmlPath = path.join(bakeryWebDir, 'partner.html');
 
-// Serve Super Admin Portal directly at root / and /admin
+// Serve Trava Website directly at root /
 app.get('/', (req, res) => {
-  if (fs.existsSync(adminHtmlPath)) return res.sendFile(adminHtmlPath);
-  res.sendFile(path.join(bakeryWebDir, 'admin.html'));
+  if (req.headers.accept && req.headers.accept.includes('text/html')) {
+    if (fs.existsSync(websiteHtmlPath)) return res.sendFile(websiteHtmlPath);
+    return res.sendFile(path.join(bakeryWebDir, 'index.html'));
+  }
+  res.json({
+    app: 'Trava',
+    tagline: "People Solving People's Problem.",
+    subtitle: 'Know Where Your Bus Is, on Every Route.',
+    status: 'ONLINE',
+    city: 'Coimbatore, Tamil Nadu, India'
+  });
 });
 
-app.get('/admin', (req, res) => {
-  if (fs.existsSync(adminHtmlPath)) return res.sendFile(adminHtmlPath);
-  res.sendFile(path.join(bakeryWebDir, 'admin.html'));
-});
-
-app.get('/admin.html', (req, res) => {
-  if (fs.existsSync(adminHtmlPath)) return res.sendFile(adminHtmlPath);
-  res.sendFile(path.join(bakeryWebDir, 'admin.html'));
-});
-
+// Admin Command Center Portal
+app.get('/admin', (req, res) => res.sendFile(adminHtmlPath));
+app.get('/admin.html', (req, res) => res.sendFile(adminHtmlPath));
 app.get('/admin-portal', (req, res) => res.redirect('/admin'));
 
-// Bakery partner portal
+// Partner Merchant Portal
+app.get('/partner', (req, res) => res.sendFile(partnerHtmlPath));
+app.get('/partners', (req, res) => res.redirect('/partner'));
+app.get('/partner.html', (req, res) => res.sendFile(partnerHtmlPath));
+
+// Bakery portal alias
 app.use('/bakery', express.static(bakeryWebDir));
-app.get('/partner', (req, res) => res.redirect('/bakery/partner.html'));
-app.get('/partners', (req, res) => res.redirect('/bakery/partner.html'));
+
+// Serve static assets for Trava website and portals at root
+app.use(express.static(bakeryWebDir));
 
 // Static assets from project root
 app.use(express.static(path.resolve(__dirname, '../')));

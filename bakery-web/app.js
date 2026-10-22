@@ -1,8 +1,8 @@
 // TRAVA Public Transit Web Portals - Client Application
 
-const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-  ? `${window.location.origin}/api/v1`
-  : 'http://localhost:5000/api/v1';
+const API_BASE = (window.location.hostname === 'localhost' && window.location.port !== '5000' && window.location.port !== '')
+  ? 'http://localhost:5000/api/v1'
+  : `${window.location.origin}/api/v1`;
 
 // Initial 5 Bakery Customers for Annapoorna Bakery & Sweets
 const INITIAL_BAKERY_CUSTOMERS = [
