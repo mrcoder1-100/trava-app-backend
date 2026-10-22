@@ -54,8 +54,10 @@ class ApiService extends ChangeNotifier {
     }
     
     final savedBaseUrl = prefs.getString('trava_base_url');
-    if (savedBaseUrl != null && savedBaseUrl.isNotEmpty) {
+    if (savedBaseUrl != null && savedBaseUrl.isNotEmpty && !savedBaseUrl.contains('localhost')) {
       _baseUrl = savedBaseUrl;
+    } else {
+      _baseUrl = AppConstants.defaultBaseUrl;
     }
     final savedUserJson = prefs.getString('trava_user_data');
     if (savedUserJson != null) {

@@ -10,9 +10,8 @@ class AppConstants {
   static const String defaultOrigin = 'Gandhipuram';
   static const String defaultDestination = 'Singanallur';
 
-  // Backend API URL
-  // On web: window.location.hostname:5000 or localhost:5000
-  static String defaultBaseUrl = 'http://localhost:5000/api/v1';
+  // Backend API URL (Production Render URL with fallback)
+  static String defaultBaseUrl = 'https://trava-app-backend.onrender.com/api/v1';
 
   // Demo Mode Badge text
   static const String demoBadgeText = 'DEMO MODE · SIMULATED GPS';
