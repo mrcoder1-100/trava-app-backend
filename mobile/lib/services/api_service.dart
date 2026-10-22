@@ -43,6 +43,16 @@ class ApiService extends ChangeNotifier {
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('trava_jwt_token');
+    
+    if (kIsWeb) {
+      try {
+        final origin = Uri.base.origin;
+        if (origin.startsWith('http')) {
+          _baseUrl = '$origin/api/v1';
+        }
+      } catch (_) {}
+    }
+    
     final savedBaseUrl = prefs.getString('trava_base_url');
     if (savedBaseUrl != null && savedBaseUrl.isNotEmpty) {
       _baseUrl = savedBaseUrl;

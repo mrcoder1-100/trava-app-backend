@@ -35,20 +35,25 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const fs = require('fs');
 
-// Serve Static Web Apps (Bakery, Commuter & Super Admin)
+// Serve Static Web Apps (Trava Core App, Bakery, Commuter & Super Admin)
+const travaCoreWebDir = fs.existsSync(path.resolve(__dirname, '../../trava-core-web'))
+  ? path.resolve(__dirname, '../../trava-core-web')
+  : (fs.existsSync(path.resolve(__dirname, '../trava-core-web')) ? path.resolve(__dirname, '../trava-core-web') : path.resolve(__dirname, '../../mobile/build/web'));
+
 const bakeryWebDir = fs.existsSync(path.resolve(__dirname, '../../bakery-web'))
   ? path.resolve(__dirname, '../../bakery-web')
   : (fs.existsSync(path.resolve(__dirname, '../bakery-web')) ? path.resolve(__dirname, '../bakery-web') : path.resolve(__dirname, '../public'));
 
+const coreAppHtmlPath = path.join(travaCoreWebDir, 'index.html');
 const websiteHtmlPath = path.join(bakeryWebDir, 'index.html');
 const adminHtmlPath = path.join(bakeryWebDir, 'admin.html');
 const partnerHtmlPath = path.join(bakeryWebDir, 'partner.html');
 
-// Serve Trava Website directly at root /
+// Serve Core Trava App (Live Transit Maps, GPS Tracking, Features) directly at root /
 app.get('/', (req, res) => {
   if (req.headers.accept && req.headers.accept.includes('text/html')) {
+    if (fs.existsSync(coreAppHtmlPath)) return res.sendFile(coreAppHtmlPath);
     if (fs.existsSync(websiteHtmlPath)) return res.sendFile(websiteHtmlPath);
-    return res.sendFile(path.join(bakeryWebDir, 'index.html'));
   }
   res.json({
     app: 'Trava',
@@ -59,23 +64,27 @@ app.get('/', (req, res) => {
   });
 });
 
+// Trava Core Flutter Web App assets at root
+if (fs.existsSync(travaCoreWebDir)) {
+  app.use(express.static(travaCoreWebDir));
+}
+
 // Admin Command Center Portal
 app.get('/admin', (req, res) => res.sendFile(adminHtmlPath));
 app.get('/admin.html', (req, res) => res.sendFile(adminHtmlPath));
 app.get('/admin-portal', (req, res) => res.redirect('/admin'));
 
-// Partner Merchant Portal
+// Partner Merchant Portal & Commuter Portal
 app.get('/partner', (req, res) => res.sendFile(partnerHtmlPath));
 app.get('/partners', (req, res) => res.redirect('/partner'));
 app.get('/partner.html', (req, res) => res.sendFile(partnerHtmlPath));
+app.get('/commuter', (req, res) => res.sendFile(websiteHtmlPath));
+app.get('/rewards-portal', (req, res) => res.sendFile(websiteHtmlPath));
 
 // Bakery portal alias
 app.use('/bakery', express.static(bakeryWebDir));
 
-// Serve static assets for Trava website and portals at root
-app.use(express.static(bakeryWebDir));
-
-// Static assets from project root
+// Serve static assets from project root
 app.use(express.static(path.resolve(__dirname, '../')));
 
 // Serve Trava IVR & Toll-Free Simulator at /ivr

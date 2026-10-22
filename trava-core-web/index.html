@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Trava - People Solving People's Problem. Know Where Your Bus Is, on Every Route.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Trava">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Trava — People Solving People's Problem</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Google Maps JavaScript API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY_HERE"></script>
+
+  <!-- Trava Transit Voice Announcement Engine with Transit Station Chime -->
+  <script>
+    (function() {
+      let audioCtx = null;
+      function playTransitChime() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return Promise.resolve();
+          if (!audioCtx) audioCtx = new AudioContext();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          
+          const now = audioCtx.currentTime;
+          // Dual Chime: D5 (587.33 Hz) -> A5 (880.0 Hz)
+          const osc1 = audioCtx.createOscillator();
+          const gain1 = audioCtx.createGain();
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(587.33, now);
+          gain1.gain.setValueAtTime(0.2, now);
+          gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc1.connect(gain1);
+          gain1.connect(audioCtx.destination);
+          osc1.start(now);
+          osc1.stop(now + 0.35);
+
+          const osc2 = audioCtx.createOscillator();
+          const gain2 = audioCtx.createGain();
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(880.0, now + 0.2);
+          gain2.gain.setValueAtTime(0.25, now + 0.2);
+          gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+          osc2.connect(gain2);
+          gain2.connect(audioCtx.destination);
+          osc2.start(now + 0.2);
+          osc2.stop(now + 0.6);
+
+          return new Promise(r => setTimeout(r, 650));
+        } catch (e) {
+          console.warn('Transit chime exception:', e);
+          return Promise.resolve();
+        }
+      }
+
+      let currentAudio = null;
+
+      function stopAllAudio() {
+        if (currentAudio) {
+          try {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+          } catch (_) {}
+          currentAudio = null;
+        }
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+      }
+
+      function getEnglishMaleVoice() {
+        if (!('speechSynthesis' in window)) return null;
+        const voices = window.speechSynthesis.getVoices();
+        const maleKeywords = ['david', 'ravi', 'george', 'mark', 'richard', 'james', 'guy', 'male'];
+        for (const v of voices) {
+          const vName = (v.name || '').toLowerCase();
+          const vLang = (v.lang || '').toLowerCase();
+          if (vLang.startsWith('en')) {
+            if (maleKeywords.some(k => vName.includes(k))) return v;
+          }
+        }
+        return voices.find(v => (v.lang || '').toLowerCase().startsWith('en-in')) ||
+               voices.find(v => (v.lang || '').toLowerCase().startsWith('en')) || null;
+      }
+
+      function getFemaleVoice() {
+        if (!('speechSynthesis' in window)) return null;
+        const voices = window.speechSynthesis.getVoices();
+        const femaleKeywords = ['zira', 'heera', 'neerja', 'veena', 'female', 'susan', 'hazel', 'catherine'];
+        for (const v of voices) {
+          const vName = (v.name || '').toLowerCase();
+          if (femaleKeywords.some(k => vName.includes(k))) return v;
+        }
+        return voices.find(v => (v.lang || '').toLowerCase().startsWith('en-in')) || null;
+      }
+
+      function transliterateTamilPhonetic(tamilText) {
+        let txt = tamilText;
+        txt = txt.replace(/பயணிகள்\s*கவனத்திற்கு\.?/g, 'Payanigal gavanathirku.');
+        txt = txt.replace(/காந்திபுரம்/g, 'Gandhipuram');
+        txt = txt.replace(/சிங்காநல்லூர்/g, 'Singanalloor');
+        txt = txt.replace(/பீளமேடு/g, 'Peelamedu');
+        txt = txt.replace(/ஃபன்\s*மால்/g, 'Fun Mall');
+        txt = txt.replace(/ஹோப்ஸ்/g, 'Hopes');
+        txt = txt.replace(/லட்சுமி\s*மில்ஸ்/g, 'Lakshmi Mills');
+        txt = txt.replace(/ராமநாதபுரம்/g, 'Ramanathapuram');
+        txt = txt.replace(/சுந்தராபுரம்/g, 'Sundarapuram');
+        txt = txt.replace(/உக்கடம்/g, 'Ukkadam');
+        txt = txt.replace(/ரயில்\s*நிலையம்/g, 'Railway Station');
+        txt = txt.replace(/செல்லும்\s*பேருந்து/g, 'sellum perundhu');
+        txt = txt.replace(/இன்னும்/g, 'innum');
+        txt = txt.replace(/நிமிடங்களில்\s*வந்து\s*சேரும்\.?/g, 'nimidangalil vandhu serum.');
+        txt = txt.replace(/வந்து\s*சேரும்\.?/g, 'vandhu serum.');
+        return txt;
+      }
+
+      function speakTamilFemaleAudio(taText) {
+        return new Promise((resolve) => {
+          stopAllAudio();
+          const encoded = encodeURIComponent(taText);
+          const urls = [
+            `http://localhost:5000/api/v1/tts?text=${encoded}&lang=ta`,
+            `http://127.0.0.1:5000/api/v1/tts?text=${encoded}&lang=ta`,
+            `http://localhost:5000/api/tts?text=${encoded}&lang=ta`
+          ];
+          let urlIdx = 0;
+
+          const audio = new Audio();
+          audio.crossOrigin = 'anonymous';
+          currentAudio = audio;
+          let hasEnded = false;
+
+          const finish = () => {
+            if (!hasEnded) {
+              hasEnded = true;
+              currentAudio = null;
+              resolve();
+            }
+          };
+
+          audio.onended = finish;
+          audio.onerror = () => {
+            urlIdx++;
+            if (urlIdx < urls.length) {
+              audio.src = urls[urlIdx];
+              audio.play().catch(() => {
+                audio.onerror();
+              });
+            } else {
+              speakTamilSynthesisFallback(taText).then(finish);
+            }
+          };
+
+          audio.src = urls[0];
+          audio.play().catch(() => {
+            audio.onerror();
+          });
+        });
+      }
+
+      function speakTamilSynthesisFallback(taText) {
+        return new Promise((resolve) => {
+          if (!('speechSynthesis' in window)) return resolve();
+          const voices = window.speechSynthesis.getVoices();
+          const taVoice = voices.find(v => {
+            const n = (v.name || '').toLowerCase();
+            const l = (v.lang || '').toLowerCase();
+            return l.startsWith('ta') || n.includes('pallavi') || n.includes('tamil') || n.includes('தமிழ்');
+          });
+
+          let textToSpeak = taText;
+          let voiceToUse = taVoice;
+          let pitch = 1.3; // Female pitch
+
+          if (!taVoice) {
+            // Windows/System doesn't have native Tamil voice pack;
+            // Transliterate to phonetic Roman Tamil so all words are pronounced aloud by TTS!
+            textToSpeak = transliterateTamilPhonetic(taText);
+            voiceToUse = getFemaleVoice();
+            pitch = 1.25;
+          }
+
+          const u = new SpeechSynthesisUtterance(textToSpeak);
+          u.lang = taVoice ? 'ta-IN' : 'en-IN';
+          u.rate = 0.88;
+          u.pitch = pitch;
+          if (voiceToUse) u.voice = voiceToUse;
+          u.onend = resolve;
+          u.onerror = resolve;
+          window.speechSynthesis.speak(u);
+        });
+      }
+
+      window.travaPlayChime = function() {
+        return playTransitChime();
+      };
+
+      window.travaSpeak = function(text, lang) {
+        stopAllAudio();
+        const isTamil = (lang === 'ta' || lang === 'ta-IN' || lang === 'tamil');
+        playTransitChime().then(() => {
+          if (isTamil) {
+            speakTamilFemaleAudio(text);
+          } else {
+            if (!('speechSynthesis' in window)) return;
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = 0.92;
+            u.pitch = 0.95; // Male pitch
+            u.lang = 'en-IN';
+            const maleVoice = getEnglishMaleVoice();
+            if (maleVoice) u.voice = maleVoice;
+            window.speechSynthesis.speak(u);
+          }
+        });
+      };
+
+      window.travaSpeakBilingual = function(enText, taText) {
+        stopAllAudio();
+        playTransitChime().then(() => {
+          if (!('speechSynthesis' in window)) {
+            speakTamilFemaleAudio(taText);
+            return;
+          }
+          const uEn = new SpeechSynthesisUtterance(enText);
+          uEn.rate = 0.92;
+          uEn.pitch = 0.95; // Male pitch
+          uEn.lang = 'en-IN';
+          const maleVoice = getEnglishMaleVoice();
+          if (maleVoice) uEn.voice = maleVoice;
+
+          uEn.onend = function() {
+            setTimeout(() => {
+              speakTamilFemaleAudio(taText);
+            }, 380);
+          };
+
+          uEn.onerror = function() {
+            speakTamilFemaleAudio(taText);
+          };
+
+          window.speechSynthesis.speak(uEn);
+        });
+      };
+
+      window.travaStopSpeech = function() {
+        stopAllAudio();
+      };
+      
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = function() {
+          window.speechSynthesis.getVoices();
+        };
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
